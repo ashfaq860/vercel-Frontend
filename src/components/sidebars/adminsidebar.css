@@ -1,0 +1,11 @@
+ul.nav-pills li a[aria-expanded="true"] {
+    color: #ff2d37 !important;
+}
+ul.subManu li a {
+    font-size: 12px !important;
+    color: #ff2d37 !important
+}
+
+ul.nav-pills li a[aria-expanded="true"]:hover, ul.subManu li a:hover{
+    color:white !important;
+}

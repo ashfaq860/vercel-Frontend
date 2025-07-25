@@ -1,0 +1,132 @@
+@font-face {
+   font-family: 'Rubik';
+   src: url('Rubik.ttf');
+}
+
+ul.socialIcons{margin:6px; padding-left:0px;}
+ul.socialIcons li {
+    list-style-type: none;
+}
+
+
+ul.socialIcons li a {
+        display: block;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 3px;
+        margin-left: 5px;
+        margin-right: 5px;
+        height: 36px;
+        width: 36px;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+        line-height: 34px;
+        color: #bbb !important;
+    }
+
+.topNavLeft li a:hover {
+    background: #ff2d37;
+    color: #fff !important;
+    border: 1px solid #ff2d37;
+    font-family: 'Rubik', sans-serif !important;
+    transition: -webkit-text-stroke 2s;
+    -webkit-text-stroke: 1px;
+}
+.telephone {
+    color: #bbb !important;
+    margin-bottom:0px;
+    line-height:3;
+
+   
+}
+
+@media only screen and (min-width: 600px) {
+    .telephone{
+     padding-left:120px;
+    }
+}
+@media only screen and (max-width: 991px) {
+    .nav-link {
+        border-radius: 5px !important;
+        margin-top:3px !important;
+        padding-left:5px !important;
+          }
+}
+@media only screen and (max-width: 320px) {
+    .miniNavButton {
+        margin-left: 0 !important;
+    }
+
+    .miniCartSmallScreenButton {
+        margin-right: 0 !important;
+    }
+}
+@media only screen and (max-width: 320px) {
+    .miniNavButton {
+        margin-left: 0 !important;
+    }
+
+    .miniCartSmallScreenButton {
+        margin-right: 0 !important;
+    }
+}
+@media only screen and (max-width: 353px) {
+    .miniNavButton {
+        margin-left: 0 !important;
+    }
+
+    .miniCartSmallScreenButton {
+        margin-right: 0 !important;
+    }
+}
+@media only screen and (max-width: 240px) {
+    .miniNavButton {
+        margin-left: 0 !important;
+    }
+
+    .miniCartSmallScreenButton {
+        margin-right: 0 !important;
+        width: 255px !important;
+        font-size: 14px !important;
+    }
+}
+.register a, .register {
+    color: #bbb !important;
+    line-height: 3;
+    text-decoration: none;
+}
+    .register a.active {
+        color: #ff2d37 !important;
+    }
+        .register a:hover {
+        color:#ff2d37 !important;
+    }
+
+
+.nav-link {
+    color: #282828 !important;
+    font-family: Rubik !important;
+    padding: 18px 10px 16px 10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    margin-left:2px;
+    font-size:14px;
+    text-transform:uppercase;
+}
+.nav-link:hover {
+        background-color: #ff2d37 !important;
+        color:#fff !important;
+    }
+nav a.active {
+    background-color: #ff2d37 !important;
+    color:#fff !important;
+}
+
+/*Admin header Css*/ 
+.sidebar li a{
+    color:white !important;
+}
+.sidebar li a:hover{
+    background:none !important;
+    color:#ff2d37 !important;
+}

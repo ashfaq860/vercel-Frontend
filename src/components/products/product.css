@@ -1,0 +1,112 @@
+
+
+.sale-label, .new-product-label {
+    text-align: center;
+    
+    border-radius: 0;
+    color: #fff;
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    min-width: 60px;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    top: 15px;
+    
+    text-transform: uppercase;
+    z-index: 2;
+    padding: 0 15px;
+    margin-bottom: 5px;
+}
+.sale-label {
+    background-color: #ff2d37;
+    left: -11px;
+}
+.new-product-label {
+    background-color: #3599ff;
+    right: -11px;
+}
+    .sale-label:before {
+        content: "";
+        position: absolute;
+        top: auto;
+        bottom: -6px;
+        left: 0;
+        right: auto;
+        border-bottom: 7px solid transparent;
+        border-top: 0 solid transparent;
+        border-right: 11px solid #ff2d37;
+    }
+
+.new-product-label:before {
+    content: "";
+    position: absolute;
+    top: auto;
+    bottom: -6px;
+    right: 0;
+    left: auto;
+    border-bottom: 7px solid transparent;
+    border-top: 0 solid transparent;
+    border-left: 11px solid #0055ac;
+}
+.addTocart-btn {
+    border: 2px solid #ff2d37 !important;
+    font-family: 'Oswald', sans-serif !important;
+}
+.addTocart-btn:hover {
+background:#ff2d37 !important;
+color:#fff !important;
+
+}
+
+.card-title a{
+    color:#ff2d37 !important;
+    font-weight:bold;
+    text-decoration:none;
+}
+    .card-title a:hover {
+    color:blue !important;
+    text-decoration:underline;
+    }
+    .card:hover {
+    box-shadow: rgba(40, 40, 40, 0.35) 0px 5px 15px;
+}
+
+
+.innerDesc:before {
+    content: "";
+    width: 4px;
+    background: #ff2d37;
+    height: 100%;
+    position: absolute;
+    left: -20px;
+    top: 0;
+
+}
+/*@keyframes scrollAnimate {
+    from {
+        opacity: 0;
+        -moz-opacity: 0;
+       scale: 0.5;
+    -moz-scale:0.5;
+       }
+
+   
+    to {
+        opacity:1;
+        scale:1;
+    }
+}
+.card, .scrollShow {
+    animation: scrollAnimate 5s linear;
+    -webkit-animation: scrollAnimate 5s linear;
+    -moz-animation: scrollAnimate 5s linear;
+    animation-timeline: view();
+    -webkit-animation-timeline: view();
+    -moz-animation-timeline: view();
+    animation-range: entry 0 cover 30%;
+    -webkit-animation-range: entry 0 cover 30%;
+    -moz-animation-range: entry 0 cover 30%;
+}
+    */

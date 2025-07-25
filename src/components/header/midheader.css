@@ -1,0 +1,128 @@
+.midHeader {
+    clear: both;
+    padding: 33px 0;
+
+}
+.search-header-w {
+    padding-top: 10px;
+}
+.logo {
+  
+}
+.btn-shoppingCart{float:right;}
+#search0 select {
+    padding: 0px 15px;
+    height: 50px;
+    line-height: 50;
+    color: #484848;
+    border: 3px solid #e5e5e5;
+    border-right:1px solid #e5e5e5;
+    font-size: 13px;
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+    #search0 select::selection {
+      border-color:#e5e5e5;
+    }
+    #search0 input {
+        z-index: 10000;
+        color: #bbb;
+        font-size: 13px;
+        border-top: 3px solid #e5e5e5;
+        border-bottom: 3px solid #e5e5e5;
+        border-right: none !important;
+    }
+.searchBox, .searchBox:focus, .searchBox:active {
+    box-shadow: none !important;
+   
+    border-color:#e5e5e5 !important;
+}
+.button-search {
+    padding: 0 16px !important;
+    font-size: 18px;
+    -webkit-text-stroke: 2px #212529;
+    background: none !important;
+    color: #ff2d37 !important;
+    border-top: 3px solid #e5e5e5 !important;
+    border-bottom: 3px solid #e5e5e5 !important;
+    border-right: 3px solid #e5e5e5 !important;
+}
+    .button-search:hover {
+        -webkit-text-stroke: 3px #ff2d37;
+    }
+    .button-search:focus, .button-search:active {
+        outline: none !important;
+        box-shadow: none !important;
+        border-left: none !important
+    }
+    /* Microphone button and cross text button icons*/
+    .button-mic, .button-cross {
+        border-top: 3px solid #e5e5e5 !important;
+        border-bottom: 3px solid #e5e5e5 !important;
+        border-left: 2px solid #e5e5e5 !important;
+        background: none !important;
+        color: black;
+        border-left: none !important;
+    }
+    .button-mic:hover, .button-cross:hover {
+            color: #ff2d37 !important;
+        }
+        .button-mic:focus, .button-cross:focus, .button-mic:active, .button-cross:active {
+            outline: none !important;
+            box-shadow: none !important;
+            border-right: none !important;
+            border-left: none !important
+        }
+
+    /* Microphone button and cross text button icons*/
+    .cartButton {
+        border: none;
+    }
+.basket-icon, .basket-txt {
+    float: left;
+    border: 3px solid #e5e5e5;
+    padding: 13px;
+}
+.basket-txt {
+border-top-right-radius:7px;
+border-bottom-right-radius:7px;
+}
+    .basket-icon{
+        border-right:0px;
+        border-top-left-radius:7px;
+        border-bottom-left-radius:7px;
+    }
+    .bskt-icon {
+        -webkit-text-stroke: 1px;
+    }
+.bskt-qty {
+    position: absolute;
+    background-color: #ff2d37;
+    background: #ff2d37 !important;
+    border-radius: 100%;
+    top: -6px;
+    left: 48px;
+    padding: 4px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 12px;
+    padding-top: 3px;
+    color: #fff;
+    padding-bottom: 1px;
+}
+.dropdown-toggle1{border:none !important;}
+@media screen and (max-width: 576px) {
+    
+    .nav-link {
+        color: #282828 !important;
+        font-family: Rubik !important;
+        padding: 18px 10px 16px 10px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        margin-left: 2px;
+        font-size: 14px;
+        text-transform: uppercase;
+    }
+
+
+}

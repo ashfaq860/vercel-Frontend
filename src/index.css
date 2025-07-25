@@ -1,13 +1,67 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+h1, h2, h3,h4, .card-title, .latestProductName, .latestProductHeader, .latestProductPrice {
+    font-family: 'Oswald', sans-serif !important;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body, p, span, .card-text, .startAndReview , .tabsText{
+    font-family: 'Roboto', sans-serif !important;
 }
+.addToCart-btn {
+    font-family: 'Oswald', sans-serif !important;
+}
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .print-area, .print-area * {
+        visibility: visible;
+    }
+
+    .print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 20px;
+    }
+}
+
+.print-area {
+    font-family: 'Arial', sans-serif;
+    padding: 30px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+    .print-area .invoice-title {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .print-area .company-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .print-area .company-logo {
+        height: 80px;
+    }
+
+    .print-area .table th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+
+    .print-area .table td, .print-area .table th {
+        vertical-align: middle !important;
+        padding: 8px !important;
+    }
+
+    .print-area .section-title {
+        border-bottom: 2px solid #000;
+        font-weight: bold;
+        font-size: 18px;
+        margin: 20px 0 10px;
+    }

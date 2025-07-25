@@ -1,38 +1,52 @@
-.App {
-  text-align: center;
+
+.divider {
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    color: rgb(40, 40, 40);
+    
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+    .divider::before, .divider::after {
+        flex: 1;
+        content: '';
+        padding: 1px;
+        background-color: #ff2d37;
+        margin: 5px;
+    }
+
+    input[type='number']::-webkit-outer-spin-button,
+    input[type='number']::-webkit-inner-spin-button{
+        -webkit-appearance:none !important;
+        margin:0 !important;
+    }
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.scroll-animate {
+    opacity: 0;
+    transform: scale(0.8) translateY(40px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    .scroll-animate.show {
+        animation: fadeInScale 0.6s ease forwards;
+    }
+    /* Custom NProgress styles */
+#nprogress .bar {
+  background: #00b894 !important;
+  height: 3px;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#nprogress .peg {
+  box-shadow: 0 0 10px #00b894, 0 0 5px #00b894;
 }

@@ -1,0 +1,51 @@
+div.forms input {
+    margin-top: 13px;
+    box-shadow: 0 0 2px #bbb, 0 0 3px #bbb;
+}
+.removeBoxShadow:hover{
+    box-shadow:0px 0px !important;
+}
+div.forms input:focus {
+    box-shadow: 0 0 3px #bbb, 0 0 5px #bbb !important;
+}
+    div .forms button {
+    width:100%;
+   
+    }
+    p .textAfterButton {
+    text-align: right;
+}
+.confirmPass{
+    position:relative;
+}
+.showPass {
+    position: absolute;
+    top: 19px;
+    right: 23px;
+    font-size: 12px;
+    font-weight: bold;
+    font-family:sans-serif;
+
+}
+.showPass i {
+    font-size:18px;
+
+    }
+f.showPass i:hover {
+           cursor:pointer;
+           color:blue;
+        }
+/**OTP input field css*/
+.otp_input{
+    text-align:center;
+    font-weight:600;
+}
+.resendOTP{
+    cursor:pointer;
+    font-size:12px;
+
+}
+/* Google Button Css*/
+.nsm7Bb-HzV7m-LgbsSe{
+    width:270px !important;
+}

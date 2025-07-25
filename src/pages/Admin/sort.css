@@ -1,0 +1,9 @@
+#sortOrder {
+    word-wrap: normal;
+    border:none;
+    background: none;
+    //border-radius:18px; 
+    padding:5px;
+    text-align:center;
+    font-size:20PX;
+}

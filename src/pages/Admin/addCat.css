@@ -1,0 +1,11 @@
+
+.fileControl{
+    padding-top:17px !important;
+}
+input[type="file"]::file-selector-button {
+    background-color: white !important;
+}
+.actionLink a{
+    text-decoration:none;
+
+}

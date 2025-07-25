@@ -1,0 +1,20 @@
+.pagination .page-item a.page-link{
+    border: none !important;
+    color: #000;
+}
+.pagination .active a.page-link, .pagination .page-item .page-link:hover {
+    background: none !important;
+    text-decoration:underline;
+    color: #ff2d37 !important;
+   
+}
+ .pagination .page-item a.page-link:focus {
+box-shadow:none !important;
+background:none !important;
+}
+.pagination .page-item .disabled {
+    box-shadow: none !important;
+    background: none !important;
+    color:#bbb !important;
+}
+

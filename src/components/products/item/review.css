@@ -1,0 +1,20 @@
+div.stars span {
+    font-size: 40px;
+    color: #e5dbdb;
+}
+    .selected, .onMouseOverStart {
+    color: #ffc400 !important;
+}
+
+
+    div.stars span:hover {
+    cursor:pointer;
+    }
+.reviewButton {
+    background-color: #ff2d37 !important;
+    color:white !important;
+    font-weight:bold !important;
+}
+.reviewButton:hover{
+    background-color:#ff8005 !important;
+}
