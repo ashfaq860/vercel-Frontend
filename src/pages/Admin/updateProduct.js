@@ -43,7 +43,7 @@ const UpdateProduct = () => {
     const getSingleProduct = async() => {
         try {
             const response = await getProductById(pId);
-            console.log(response.data.product.shippingCost);
+            console.log(response.data);
             if (response.status == 200) {
                 setShippingPrice(response?.data?.product?.shippingCost);
                 setName(response?.data?.product?.name);
