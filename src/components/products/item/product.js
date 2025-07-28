@@ -49,7 +49,7 @@ const Product = (props) => {
 					</div>
 					<h5 className="card-title"><Link to={`/parts/${props._id}`}>{props.name} <br />{props.urduName}</Link></h5>
 					<p className="card-text">
-						{ props.manufacturer} Company's {props.name} with {props.quality} quality for {props.category}.
+						{ props.manufacturer} Company&#39; {props.name} with {props.quality} quality for {props.category}.
 					</p>
 					<h3>
 						{props.discount > 0 ? (<><span style={{ "fontSize": "16px" }} className="text-danger"><del>Rs.{props.s_price + 10}</del>  </span></>) : (<></>)}
