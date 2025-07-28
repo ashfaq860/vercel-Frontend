@@ -115,7 +115,7 @@ const UpdateProduct = () => {
             const response = await updateProduct(data);
 
             setLoading(false);
-            if (response.status == 201) {
+            if (response.status == 200) {
                 navigate("/admin/productList");
             } else if (response.status === 500 && response.response.data.message === "jwt expired") {
                 toast.error("Your Session has expired !");
