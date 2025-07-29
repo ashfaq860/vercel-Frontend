@@ -8,10 +8,10 @@ import LoadingButton from "../loader/loadingButton";
 import GoBack from "../loader/goBack";
 import { getAllCat, getProductById, updateProduct } from "../../api/internal";
 import { resetUser } from "../../store/userSlice";
-import './addCat.css';
+import styles from './updateProduct.module.css';
 
 const UpdateProduct = () => {
-    // Refs
+    // Refs and hooks
     const inputRef = useRef();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -19,8 +19,6 @@ const UpdateProduct = () => {
 
     // Redux state
     const user = useSelector(state => state.user._id);
-    const auth = useSelector(state => state.user.auth);
-    const username = useSelector(state => state.user.username);
 
     // Component state
     const [loading, setLoading] = useState(false);
@@ -36,19 +34,21 @@ const UpdateProduct = () => {
         quality: '',
         photo: '',
         category: '',
-        author: '',
         desc: '',
         tags: '',
-        shippingPrice: 0,
-        catName: ''
+        shippingCost: 0,
     });
 
-    // Memoized data fetchers
-    const getSingleProduct = useCallback(async () => {
+    // Data fetching
+    const fetchProductData = useCallback(async () => {
         try {
-            const response = await getProductById(pId);
-            if (response.status === 200) {
-                const { product } = response.data;
+            const [productResponse, categoriesResponse] = await Promise.all([
+                getProductById(pId),
+                getAllCat()
+            ]);
+
+            if (productResponse.status === 200) {
+                const { product } = productResponse.data;
                 setProductData({
                     name: product.name || '',
                     urduName: product.urduName || '',
@@ -60,40 +60,26 @@ const UpdateProduct = () => {
                     quality: product.quality || '',
                     photo: product.photo || '',
                     category: product.cId || '',
-                    author: product.author?._id || '',
                     desc: product.desc || '',
                     tags: product.tags || '',
-                    shippingPrice: product.shippingCost || 0,
-                    catName: product.category || ''
+                    shippingCost: product.shippingCost || 0,
                 });
             }
+
+            if (categoriesResponse.status === 200) {
+                setCategories(categoriesResponse.data.categories);
+            }
         } catch (error) {
-            console.error("Error fetching product:", error);
-            toast.error("Failed to load product data");
+            console.error("Data loading error:", error);
+            toast.error("Failed to load required data");
         }
     }, [pId]);
 
-    const getAllCategories = useCallback(async () => {
-        try {
-            const response = await getAllCat();
-            if (response.status === 200) {
-                setCategories(response.data.categories);
-            }
-        } catch (error) {
-            console.error("Error fetching categories:", error);
-            toast.error("Failed to load categories");
-        }
-    }, []);
-
-    // Effects
     useEffect(() => {
-        getSingleProduct();
-        getAllCategories();
-    }, [getSingleProduct, getAllCategories]);
+        fetchProductData();
+    }, [fetchProductData]);
 
     // Handlers
-    const handleImageClick = () => inputRef.current?.click();
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setProductData(prev => ({ ...prev, [name]: value }));
@@ -115,7 +101,7 @@ const UpdateProduct = () => {
             ...productData,
             pId,
             author: user,
-            shippingCost: productData.shippingPrice
+            shippingCost: productData.shippingCost
         };
 
         try {
@@ -140,225 +126,234 @@ const UpdateProduct = () => {
     };
 
     // Render helpers
-    const renderCategoryOptions = () => (
-        categories.map((cat, i) => (
+    const renderSelectOptions = (options, selectedValue) => (
+        options.map((option) => (
             <option 
-                key={i} 
-                value={cat._id}
-                selected={cat._id === productData.category}
+                key={option.value} 
+                value={option.value}
+                selected={option.value === selectedValue}
             >
-                {cat.name}
-            </option>
-        ))
-    );
-
-    const renderQualityOptions = () => (
-        ["High", "Medium", "Low"].map((level, i) => (
-            <option 
-                key={i} 
-                value={level}
-                selected={level === productData.quality}
-            >
-                {level}
-            </option>
-        ))
-    );
-
-    const renderModelOptions = () => (
-        ["New", "Old", "Both"].map((model, i) => (
-            <option 
-                key={i} 
-                value={model}
-                selected={model === productData.model}
-            >
-                {model}
+                {option.label}
             </option>
         ))
     );
 
     return (
         <AdminLayout>
-            <div className="col-auto col-md-9 col-xl-10 px-sm-10">
-                <h1 className="text-center p-3">
-                    <GoBack link="/admin/productList" title="Go Back" />
-                    <b>Update Product</b>
-                </h1>
-                
-                <div className="product-form-container">
-                    <div className="row g-4">
+            <div className={styles.container}>
+                <div className={styles.header}>
+                    <GoBack link="/admin/productList" title="Go Back" /> <br />
+                    <h2>Update Product</h2>
+                </div>
+
+                <div className={styles.formContainer}>
+                    <div className={styles.formGrid}>
                         {/* Left Column */}
-                        <div className="col-md-6 col-12">
-                            <TextInput
-                                label="Product Name"
-                                type="text"
-                                name="name"
-                                value={productData.name}
-                                onChange={handleInputChange}
-                                floating
-                            />
+                        <div>
+                            <div className={styles.formSection}>
+                                <label className={styles.label}>Product Name</label>
+                                <input
+                                    type="text"
+                                    className={styles.inputField}
+                                    name="name"
+                                    value={productData.name}
+                                    onChange={handleInputChange}
+                                    placeholder="Enter product name"
+                                />
+                            </div>
 
-                            <TextInput
-                                label="نام اردو میں تحریر کریں"
-                                type="text"
-                                name="urduName"
-                                value={productData.urduName}
-                                onChange={handleInputChange}
-                                floating
-                            />
+                            <div className={styles.formSection}>
+                                <label className={styles.label}>نام اردو میں تحریر کریں</label>
+                                <input
+                                    type="text"
+                                    className={styles.inputField}
+                                    name="urduName"
+                                    value={productData.urduName}
+                                    onChange={handleInputChange}
+                                    placeholder="نام اردو میں تحریر کریں"
+                                />
+                            </div>
 
-                            <div className="form-floating mb-3">
+                            <div className={styles.formSection}>
+                                <label className={styles.label}>Vehicle Type</label>
                                 <select 
-                                    className="form-select" 
+                                    className={styles.selectField}
                                     name="category"
                                     value={productData.category}
                                     onChange={handleInputChange}
-                                    id="floatingSelect"
                                 >
                                     <option value="">Select Vehicle</option>
-                                    {renderCategoryOptions()}
+                                    {categories.map(cat => (
+                                        <option key={cat._id} value={cat._id}>
+                                            {cat.name}
+                                        </option>
+                                    ))}
                                 </select>
-                                <label htmlFor="floatingSelect">Select Vehicle</label>
                             </div>
 
-                            <div className="form-floating mb-3">
+                            <div className={styles.formSection}>
+                                <label className={styles.label}>Vehicle Model</label>
                                 <select 
-                                    className="form-select" 
+                                    className={styles.selectField}
                                     name="model"
                                     value={productData.model}
                                     onChange={handleInputChange}
                                 >
-                                    <option value="">Select Vehicle Model</option>
-                                    {renderModelOptions()}
+                                    <option value="">Select Model</option>
+                                    {['New', 'Old', 'Both'].map(model => (
+                                        <option key={model} value={model}>
+                                            {model}
+                                        </option>
+                                    ))}
                                 </select>
-                                <label htmlFor="floatingSelect">Select Model</label>
                             </div>
 
-                            <TextInput
-                                label="Manufacturer Name"
-                                type="text"
-                                name="manufacturer"
-                                value={productData.manufacturer}
-                                onChange={handleInputChange}
-                                floating
-                            />
-
-                            <div className="form-floating mb-3">
-                                <textarea
-                                    className="form-control"
-                                    name="desc"
-                                    value={productData.desc}
+                            <div className={styles.formSection}>
+                                <label className={styles.label}>Manufacturer</label>
+                                <input
+                                    type="text"
+                                    className={styles.inputField}
+                                    name="manufacturer"
+                                    value={productData.manufacturer}
                                     onChange={handleInputChange}
-                                    rows="5"
-                                    placeholder=" "
+                                    placeholder="Manufacturer name"
                                 />
-                                <label>Description*</label>
                             </div>
-
-                            <TextInput
-                                label="Tags"
-                                type="text"
-                                name="tags"
-                                value={productData.tags}
-                                onChange={handleInputChange}
-                                floating
-                            />
-
-                            <TextInput
-                                label="Shipping Cost"
-                                type="number"
-                                name="shippingPrice"
-                                value={productData.shippingPrice}
-                                onChange={handleInputChange}
-                                floating
-                            />
                         </div>
 
                         {/* Right Column */}
-                        <div className="col-md-6 col-12">
-                            <TextInput
-                                label="Purchase Price"
-                                type="number"
-                                name="p_price"
-                                value={productData.p_price}
-                                onChange={handleInputChange}
-                                floating
-                            />
+                        <div>
+                            <div className={styles.formSection}>
+                                <label className={styles.label}>Purchase Price</label>
+                                <input
+                                    type="number"
+                                    className={styles.inputField}
+                                    name="p_price"
+                                    value={productData.p_price}
+                                    onChange={handleInputChange}
+                                    placeholder="0.00"
+                                />
+                            </div>
 
-                            <TextInput
-                                label="Sale Price"
-                                type="number"
-                                name="s_price"
-                                value={productData.s_price}
-                                onChange={handleInputChange}
-                                floating
-                            />
+                            <div className={styles.formSection}>
+                                <label className={styles.label}>Sale Price</label>
+                                <input
+                                    type="number"
+                                    className={styles.inputField}
+                                    name="s_price"
+                                    value={productData.s_price}
+                                    onChange={handleInputChange}
+                                    placeholder="0.00"
+                                />
+                            </div>
 
-                            <TextInput
-                                label="Quantity*"
-                                type="number"
-                                name="quantity"
-                                value={productData.quantity}
-                                onChange={handleInputChange}
-                                floating
-                            />
+                            <div className={styles.formSection}>
+                                <label className={styles.label}>Quantity</label>
+                                <input
+                                    type="number"
+                                    className={styles.inputField}
+                                    name="quantity"
+                                    value={productData.quantity}
+                                    onChange={handleInputChange}
+                                    placeholder="0"
+                                />
+                            </div>
 
-                            <div className="form-floating mb-3">
+                            <div className={styles.formSection}>
+                                <label className={styles.label}>Quality</label>
                                 <select 
-                                    className="form-select" 
+                                    className={styles.selectField}
                                     name="quality"
                                     value={productData.quality}
                                     onChange={handleInputChange}
                                 >
                                     <option value="">Select Quality</option>
-                                    {renderQualityOptions()}
+                                    {['High', 'Medium', 'Low'].map(quality => (
+                                        <option key={quality} value={quality}>
+                                            {quality}
+                                        </option>
+                                    ))}
                                 </select>
-                                <label>Select Quality</label>
                             </div>
 
-                            <div className="image-upload-section">
-                                <input 
-                                    type="file" 
-                                    ref={inputRef}
-                                    onChange={handleFileUpload}
-                                    className="d-none"
-                                    accept="image/*"
-                                />
-                                
+                            <div className={styles.formSection}>
+                                <label className={styles.label}>Product Image</label>
                                 <div 
-                                    className="image-preview-container"
-                                    onClick={handleImageClick}
+                                    className={styles.imageUpload}
+                                    onClick={() => inputRef.current?.click()}
                                 >
+                                    <input 
+                                        type="file" 
+                                        ref={inputRef}
+                                        onChange={handleFileUpload}
+                                        className="d-none"
+                                        accept="image/*"
+                                    />
+                                    
                                     {productData.photo ? (
                                         <img 
                                             src={productData.photo} 
                                             alt="Product Preview" 
-                                            className="img-fluid product-image"
+                                            className={styles.imagePreview}
                                         />
                                     ) : (
-                                        <div className="placeholder-image">
+                                        <>
                                             <img 
                                                 src="/icons/productImage.png" 
                                                 alt="Upload Placeholder"
-                                                className="img-fluid"
+                                                className={styles.placeholderImage}
                                             />
-                                            <span>Click to upload image</span>
-                                        </div>
+                                            <p className={styles.uploadText}>Click to upload product image</p>
+                                        </>
                                     )}
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="mt-4">
-                        <button 
-                            type="button" 
-                            onClick={handleSubmit}
-                            className="btn btn-primary btn-lg w-100"
-                            disabled={loading}
-                        >
-                            <LoadingButton loading={loading} title="Update Product" />
-                        </button>
+                    {/* Description and Tags (Full width) */}
+                    <div className={styles.formSection}>
+                        <label className={styles.label}>Description</label>
+                        <textarea
+                            className={styles.textareaField}
+                            name="desc"
+                            value={productData.desc}
+                            onChange={handleInputChange}
+                            placeholder="Detailed product description..."
+                        />
                     </div>
+
+                    <div className={styles.formSection}>
+                        <label className={styles.label}>Tags</label>
+                        <input
+                            type="text"
+                            className={styles.inputField}
+                            name="tags"
+                            value={productData.tags}
+                            onChange={handleInputChange}
+                            placeholder="Comma separated tags"
+                        />
+                    </div>
+
+                    <div className={styles.formSection}>
+                        <label className={styles.label}>Shipping Cost</label>
+                        <input
+                            type="number"
+                            className={styles.inputField}
+                            name="shippingCost"
+                            value={productData.shippingCost}
+                            onChange={handleInputChange}
+                            placeholder="0.00"
+                        />
+                    </div>
+
+                    <button 
+                        className={styles.submitButton}
+                        onClick={handleSubmit}
+                        disabled={loading}
+                    >
+                        <LoadingButton loading={loading} title="Update Product" />
+                    </button>
                 </div>
             </div>
         </AdminLayout>
