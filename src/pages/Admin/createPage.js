@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
 import AdminLayout from "../../components/layout/adminLayout";
-import './addPage.css';
-import axios from 'axios';
+import './addCat.css';
 import { useSelector } from 'react-redux';
 import { submitPageContent } from "../../api/internal";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +16,9 @@ const CreatePage = () => {
     const editor = useRef(null);
     const author = useSelector(state => state.user._id);
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // Prevent default form behavior
+        
         if (!title || !slug || !content) {
             alert("Please fill all fields!");
             return;
@@ -42,7 +43,8 @@ const CreatePage = () => {
         }
     }
 
-    const handleTitleChange = (value) => {
+    const handleTitleChange = (e) => {
+        const value = e.target.value;
         setTitle(value);
         setSlug(value.replace(/\s+/g, '-').toLowerCase());
     }
@@ -59,58 +61,59 @@ const CreatePage = () => {
                     <p className="text-muted">Fill in the details below to create a new page</p>
                 </div>
 
-                <div className="page-form-container">
-                    <div className="form-group">
-                        <label htmlFor="title">Page Title</label>
-                        <input
-                            type="text"
-                            id="title"
-                            className="form-control modern-input"
-                            onChange={(e) => handleTitleChange(e.target.value)}
-                            value={title}
-                            placeholder="Enter page title"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="slug">Page Slug</label>
-                        <input
-                            type="text"
-                            id="slug"
-                            className="form-control modern-input"
-                            onChange={(e) => setSlug(e.target.value)}
-                            value={slug}
-                            placeholder="page-slug"
-                        />
-                        <small className="text-muted">URL-friendly version of the title</small>
-                    </div>
-
-                    <div className="form-group">
-                        <label>Page Content</label>
-                        <div className="editor-container">
-                            <JoditEditor
-                                ref={editor}
-                                value={content}
-                                onChange={newContent => setContent(newContent)}
-                                config={{
-                                    buttons: ['bold', 'italic', 'link', 'unlink', 'ul', 'ol', 'font', 'fontsize', 'image'],
-                                    height: 400,
-                                }}
+                <form onSubmit={handleSubmit}> {/* Wrap in form element */}
+                    <div className="page-form-container">
+                        <div className="form-group">
+                            <label htmlFor="title">Page Title</label>
+                            <input
+                                type="text"
+                                id="title"
+                                className="form-control modern-input"
+                                onChange={handleTitleChange}
+                                value={title}
+                                placeholder="Enter page title"
                             />
                         </div>
-                    </div>
 
-                    <div className="form-actions">
-                        <button
-                            type="button"
-                            onClick={handleSubmit}
-                            className="btn btn-primary submit-btn"
-                            disabled={isSubmitting}
-                        >
-                            {isSubmitting ? 'Creating...' : 'Create Page'}
-                        </button>
+                        <div className="form-group">
+                            <label htmlFor="slug">Page Slug</label>
+                            <input
+                                type="text"
+                                id="slug"
+                                className="form-control modern-input"
+                                onChange={(e) => setSlug(e.target.value)}
+                                value={slug}
+                                placeholder="page-slug"
+                            />
+                            <small className="text-muted">URL-friendly version of the title</small>
+                        </div>
+
+                        <div className="form-group">
+                            <label>Page Content</label>
+                            <div className="editor-container">
+                                <JoditEditor
+                                    ref={editor}
+                                    value={content}
+                                    onChange={newContent => setContent(newContent)}
+                                    config={{
+                                        buttons: ['bold', 'italic', 'link', 'unlink', 'ul', 'ol', 'font', 'fontsize', 'image'],
+                                        height: 400,
+                                    }}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="form-actions">
+                            <button
+                                type="submit"
+                                className="btn btn-primary submit-btn"
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? 'Creating...' : 'Create Page'}
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </AdminLayout>
     )
