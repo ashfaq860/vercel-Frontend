@@ -35,7 +35,7 @@ const LatestCategories = () => {
 				<Category
 					key={i}
 					_id={cat._id}
-					photoPath={cat.photoPath}
+					photoPath={cat.photo}
 					name=	{cat.name}
 				/>
 
