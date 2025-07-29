@@ -125,7 +125,7 @@ const UpdateCategory = () => {
                     <div className="form-floating mb-3">
                         <input 
                             type="text" 
-                            className="form-control" 
+                            className="form-control text-lowercase" 
                             id="slug" 
                             onChange={(e) => setSlug(e.target.value)} 
                             value={slug || ""} 
