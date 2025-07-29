@@ -205,17 +205,3 @@
   }
 }
 
-/* Empty state styles */
-.wp-admin-empty-state {
-  background: white;
-  padding: 40px;
-  border: 1px solid #dcdcde;
-  border-radius: 4px;
-  text-align: center;
-}
-
-.wp-admin-empty-state h5 {
-  color: #646970;
-  margin-bottom: 16px;
-
-}
