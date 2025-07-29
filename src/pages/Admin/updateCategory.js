@@ -1,10 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { FiUpload, FiX, FiCheck } from 'react-icons/fi';
-import './addCat.css'; // Create this CSS file for styling
+import toast from 'react-hot-toast';
 
 const UpdateCategory = () => {
   const { id } = useParams();
@@ -21,24 +18,21 @@ const UpdateCategory = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  // Handle file selection with preview
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate image type and size
       if (!file.type.match('image.*')) {
         toast.error('Please select an image file (JPEG, PNG)');
         return;
       }
       
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      if (file.size > 5 * 1024 * 1024) {
         toast.error('Image size must be less than 5MB');
         return;
       }
 
       setImage(file);
       
-      // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result);
@@ -47,7 +41,6 @@ const UpdateCategory = () => {
     }
   };
 
-  // Remove selected image
   const removeImage = () => {
     setImage(null);
     setPreview('');
@@ -56,121 +49,176 @@ const UpdateCategory = () => {
     }
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setProgress(0);
 
-    try {
-      const data = new FormData();
-      data.append('name', formData.name);
-      data.append('description', formData.description);
-      if (image) {
-        data.append('image', image);
+    const updatePromise = new Promise(async (resolve, reject) => {
+      try {
+        const data = new FormData();
+        data.append('name', formData.name);
+        data.append('description', formData.description);
+        if (image) {
+          data.append('image', image);
+        }
+
+        const config = {
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setProgress(percentCompleted);
+          },
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        };
+
+        await axios.put(`/api/categories/${id}`, data, config);
+        resolve();
+      } catch (error) {
+        console.error('Update error:', error);
+        reject(error.response?.data?.message || 'Failed to update category');
+      } finally {
+        setIsLoading(false);
+        setProgress(0);
       }
+    });
 
-      const config = {
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setProgress(percentCompleted);
+    toast.promise(
+      updatePromise,
+      {
+        loading: 'Updating category...',
+        success: 'Category updated successfully!',
+        error: (err) => err.toString()
+      },
+      {
+        style: {
+          minWidth: '250px',
         },
-        headers: {
-          'Content-Type': 'multipart/form-data',
+        success: {
+          duration: 4000,
         },
-      };
+        error: {
+          duration: 5000,
+        }
+      }
+    );
 
-      const response = await axios.put(
-        `/api/categories/${id}`,
-        data,
-        config
-      );
-
-      toast.success('Category updated successfully!');
+    try {
+      await updatePromise;
       navigate('/admin/categories');
     } catch (error) {
-      console.error('Update error:', error);
-      toast.error(error.response?.data?.message || 'Failed to update category');
-    } finally {
-      setIsLoading(false);
-      setProgress(0);
+      // Error already handled by toast.promise
     }
   };
 
   return (
-    <div className="update-category-container">
-      <h2>Update Category</h2>
-      
-      <form onSubmit={handleSubmit} className="category-form">
-        <div className="form-group">
-          <label htmlFor="name">Category Name</label>
-          <input
-            type="text"
-            id="name"
-            value={formData.name}
-            onChange={(e) => setFormData({...formData, name: e.target.value})}
-            required
-          />
+    <div className="container mt-4">
+      <div className="card">
+        <div className="card-header bg-primary text-white">
+          <h2 className="mb-0">Update Category</h2>
         </div>
+        
+        <div className="card-body">
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="name" className="form-label">Category Name</label>
+              <input
+                type="text"
+                className="form-control"
+                id="name"
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                required
+              />
+            </div>
 
-        <div className="form-group">
-          <label htmlFor="description">Description</label>
-          <textarea
-            id="description"
-            value={formData.description}
-            onChange={(e) => setFormData({...formData, description: e.target.value})}
-          />
-        </div>
+            <div className="mb-3">
+              <label htmlFor="description" className="form-label">Description</label>
+              <textarea
+                className="form-control"
+                id="description"
+                rows="3"
+                value={formData.description}
+                onChange={(e) => setFormData({...formData, description: e.target.value})}
+              />
+            </div>
 
-        <div className="image-upload-container">
-          <label className="image-upload-label">
-            {image ? (
-              <div className="image-preview-container">
-                <img src={preview} alt="Preview" className="image-preview" />
-                <button 
-                  type="button" 
-                  onClick={removeImage}
-                  className="remove-image-btn"
-                >
-                  <FiX /> Remove Image
-                </button>
+            <div className="mb-3">
+              <label className="d-block form-label">Category Image</label>
+              <div 
+                className="border rounded p-3 text-center" 
+                style={{ cursor: 'pointer' }}
+                onClick={() => fileInputRef.current.click()}
+              >
+                {image ? (
+                  <div className="position-relative">
+                    <img 
+                      src={preview} 
+                      alt="Preview" 
+                      className="img-thumbnail mb-2" 
+                      style={{ maxHeight: '200px' }} 
+                    />
+                    <button 
+                      type="button" 
+                      onClick={(e) => { e.stopPropagation(); removeImage(); }}
+                      className="btn btn-danger btn-sm position-absolute top-0 end-0"
+                    >
+                      <span aria-hidden="true">&times;</span> Remove
+                    </button>
+                  </div>
+                ) : (
+                  <div className="py-4">
+                    <span className="d-block mb-2" style={{ fontSize: '2rem' }}>↑</span>
+                    <p className="mb-0">Click to upload category image</p>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleImageChange}
+                      accept="image/*"
+                      className="d-none"
+                    />
+                  </div>
+                )}
               </div>
-            ) : (
-              <>
-                <FiUpload className="upload-icon" />
-                <span>Click to upload category image</span>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleImageChange}
-                  accept="image/*"
-                  className="hidden-input"
-                />
-              </>
+            </div>
+
+            {isLoading && (
+              <div className="mb-3">
+                <div className="progress">
+                  <div 
+                    className="progress-bar progress-bar-striped progress-bar-animated" 
+                    role="progressbar"
+                    style={{ width: `${progress}%` }}
+                    aria-valuenow={progress}
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  >
+                    {progress}%
+                  </div>
+                </div>
+              </div>
             )}
-          </label>
+
+            <div className="d-grid gap-2">
+              <button 
+                type="submit" 
+                className="btn btn-primary"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Updating...
+                  </>
+                ) : 'Update Category'}
+              </button>
+            </div>
+          </form>
         </div>
-
-        {isLoading && (
-          <div className="progress-bar-container">
-            <div 
-              className="progress-bar" 
-              style={{ width: `${progress}%` }}
-            ></div>
-            <span>{progress}%</span>
-          </div>
-        )}
-
-        <button 
-          type="submit" 
-          className="submit-btn"
-          disabled={isLoading}
-        >
-          {isLoading ? 'Updating...' : 'Update Category'}
-        </button>
-      </form>
+      </div>
     </div>
   );
 };
