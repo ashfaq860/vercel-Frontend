@@ -97,7 +97,7 @@ const AllCat = () => {
                                             <td>
                                                 <div className="category-photo">
                                                     <img 
-                                                        src={cat.photoPath} 
+                                                        src={cat.photo} 
                                                         alt={cat.name} 
                                                         className="img-thumbnail"
                                                         onError={(e) => {
@@ -109,7 +109,7 @@ const AllCat = () => {
                                             </td>
                                             <td className="fw-semibold">{cat.name}</td>
                                             <td><code>{cat.slug}</code></td>
-                                            <td>{cat.author?.name || 'Unknown'}</td>
+                                            <td>{cat.author || 'Unknown'}</td>
                                             <td>{formatDate(cat.createdAt)}</td>
                                             <td className="text-end">
                                                 <div className="d-flex justify-content-end gap-2">
