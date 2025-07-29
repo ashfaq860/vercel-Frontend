@@ -5,7 +5,7 @@ import { deleteCategory, getAllCat } from "../../api/internal";
 import { Link } from "react-router-dom";
 import Loader from "../loader/loader";
 import toast from 'react-hot-toast';
-import './allCat.css'; // Create this CSS file
+import './addCat.css'; // Create this CSS file
 
 const AllCat = () => {
     const [categories, setCategories] = useState([]);
