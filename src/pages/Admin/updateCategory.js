@@ -4,7 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FiUpload, FiX, FiCheck } from 'react-icons/fi';
-import './UpdateCategory.css'; // Create this CSS file for styling
+import './addCat.css'; // Create this CSS file for styling
 
 const UpdateCategory = () => {
   const { id } = useParams();
