@@ -143,7 +143,7 @@ const AllOrders = () => {
                                                     <td className="ps-3 fw-semibold">#{order.orderNumber}</td>
                                                     <td>{order.shippingAddress?.name || 'N/A'}</td>
                                                     <td>{formatDate(order.createdAt)}</td>
-                                                    <td>${order.total?.toFixed(2)}</td>
+                                                    <td>Rs.{order.total?.toFixed(2)}</td>
                                                     <td>
                                                         <span className="badge bg-light text-dark text-uppercase">
                                                             {order.paymentMethod}
