@@ -64,7 +64,7 @@ const CreatePage = () => {
             <Helmet>
                 <title>Create New Page</title>
             </Helmet>
-            
+            <div className="col-10 col-sm-3">
             <div className="container-fluid py-4">
                 <div className="row justify-content-center">
                     <div className="col-12 col-lg-10 col-xl-8">
@@ -154,6 +154,7 @@ const CreatePage = () => {
                     </div>
                 </div>
             </div>
+    </div>
         </AdminLayout>
     )
 }
