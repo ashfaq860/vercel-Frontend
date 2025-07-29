@@ -94,12 +94,15 @@ const AllProducts = () => {
     const firstPostIndex = lastPostIndex - productPerPage;
     const currentProducts = sortedProducts.slice(firstPostIndex, lastPostIndex);
 
-    const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD'
-        }).format(amount);
-    }
+   const formatCurrency = (amount) => {
+    // Format with commas and 2 decimal places
+    const formatted = new Intl.NumberFormat('en-PK', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(amount);
+    
+    return `Rs. ${formatted}`; // Explicitly use Rs. prefix
+}
 
     return (
         <AdminLayout>
