@@ -83,7 +83,7 @@ const EditPage = () => {
             <div className="admin-page-container">
                 <div className="admin-page-header">
                     <div className="d-flex align-items-center justify-content-between">
-                        <GoBack link="/admin/all-pages" title="Go Back" />
+                        <GoBack link="/admin/all-pages" title="Go Back" /> <br />
                         <h1>Update Page</h1>
                         <div style={{ width: '100px' }}></div>
                     </div>
