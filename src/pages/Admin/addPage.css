@@ -1,3 +1,166 @@
+/* WordPress-like styling */
+.wp-admin-pages {
+    padding: 20px;
+    max-width: 100%;
+}
+
+.wp-admin-title {
+    font-size: 23px;
+    font-weight: 400;
+    margin: 0;
+    padding: 9px 0 4px;
+    line-height: 1.3;
+}
+
+.wp-add-new {
+    padding: 4px 8px;
+    position: relative;
+    top: -3px;
+    text-decoration: none;
+    border: 1px solid #2271b1;
+    border-radius: 2px;
+    text-shadow: none;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: normal;
+    color: #fff;
+    background: #2271b1;
+    cursor: pointer;
+}
+
+.wp-admin-filters {
+    background: #fff;
+    padding: 15px;
+    border: 1px solid #c3c4c7;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box .search-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: #646970;
+}
+
+.wp-list-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.wp-list-table th {
+    background: #f6f7f7;
+    border-bottom: 1px solid #dcdcde;
+    padding: 8px 10px;
+    text-align: left;
+    font-size: 14px;
+    color: #50575e;
+}
+
+.wp-list-table td {
+    padding: 8px 10px;
+    vertical-align: middle;
+    border-bottom: 1px solid #dcdcde;
+    font-size: 14px;
+}
+
+.wp-list-item:hover {
+    background-color: #f6f7f7;
+}
+
+.wp-list-item-title {
+    color: #2271b1;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.wp-list-item-slug {
+    color: #646970;
+    font-size: 13px;
+}
+
+.wp-list-item-excerpt {
+    font-size: 13px;
+    margin-top: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.wp-list-item-author {
+    font-size: 14px;
+}
+
+.wp-list-item-date {
+    font-size: 14px;
+    color: #50575e;
+}
+
+.wp-list-actions .btn {
+    padding: 0.25rem 0.5rem;
+    border-radius: 2px;
+    border-color: #dcdcde;
+}
+
+.wp-status-published {
+    background-color: #d7f0db;
+    color: #1d2327;
+}
+
+.wp-status-draft {
+    background-color: #f0f0f1;
+    color: #1d2327;
+}
+
+/* Responsive adjustments */
+@media (max-width: 782px) {
+    .wp-list-table {
+        display: block;
+    }
+    
+    .wp-list-table thead {
+        display: none;
+    }
+    
+    .wp-list-table tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid #dcdcde;
+    }
+    
+    .wp-list-table td {
+        display: block;
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border-bottom: 1px solid #dcdcde;
+    }
+    
+    .wp-list-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: 45%;
+        padding-right: 10px;
+        font-weight: 500;
+        text-align: left;
+        color: #1d2327;
+    }
+    
+    .wp-list-item-title {
+        font-size: 16px;
+    }
+    
+    .wp-list-actions {
+        justify-content: flex-end;
+    }
+}
+
 .admin-page-container {
     max-width: 1200px;
     margin: 0 auto;
