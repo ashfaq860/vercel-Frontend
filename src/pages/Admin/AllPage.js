@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import AdminLayout from "../../components/layout/adminLayout";
 import { useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
+import parse from 'html-react-parser';
+import dayjs from 'dayjs';
+import AdminLayout from "../../components/layout/adminLayout";
 import Loader from "../loader/loader";
 import { deletePage, getAllPages } from "../../api/internal";
-import parse from 'html-react-parser';
-const dayjs = require('dayjs');
-import './pageList.css';
+import './allPage.css';
 
 const AllPages = () => {
     const [pages, setPages] = useState([]);
@@ -27,7 +27,7 @@ const AllPages = () => {
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
         getPages();
@@ -45,7 +45,7 @@ const AllPages = () => {
                 console.error("Error deleting page:", error);
             }
         }
-    }
+    };
 
     const filteredPages = pages.filter(page => {
         const matchesSearch = page.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -209,7 +209,7 @@ const AllPages = () => {
                 )}
             </div>
         </AdminLayout>
-    )
-}
+    );
+};
 
 export default AllPages;
