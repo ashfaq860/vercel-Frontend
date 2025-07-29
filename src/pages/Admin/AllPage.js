@@ -11,6 +11,8 @@ import './allPage.css';
 const AllPages = () => {
     const [pages, setPages] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedStatus, setSelectedStatus] = useState('all');
     const author = useSelector(state => state.user._id);
 
     const getPages = async () => {
@@ -45,107 +47,162 @@ const AllPages = () => {
         }
     }
 
+    const filteredPages = pages.filter(page => {
+        const matchesSearch = page.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                            page.slug.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesStatus = selectedStatus === 'all' || 
+                            (selectedStatus === 'published' && page.status === 'published') ||
+                            (selectedStatus === 'draft' && page.status === 'draft');
+        return matchesSearch && matchesStatus;
+    });
+
     return (
         <AdminLayout>
-            <div className="container-fluid py-4">
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                    <h1 className="h3 mb-0 text-gray-800">All Pages</h1>
-                    <Link 
-                        to="/admin/create-page" 
-                        className="btn btn-primary btn-sm"
-                    >
-                        <span className="d-none d-md-inline">Create New Page</span>
-                        <span className="d-inline d-md-none">+ New</span>
-                    </Link>
+            <div className="wp-admin-pages">
+                <div className="wp-admin-header">
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                        <h1 className="wp-admin-title">Pages</h1>
+                        <Link 
+                            to="/admin/create-page" 
+                            className="btn btn-primary wp-add-new"
+                        >
+                            Add New
+                        </Link>
+                    </div>
+
+                    <div className="wp-admin-filters mb-4">
+                        <div className="row g-3">
+                            <div className="col-md-6">
+                                <div className="search-box">
+                                    <input
+                                        type="search"
+                                        className="form-control"
+                                        placeholder="Search pages..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
+                                    <span className="search-icon">
+                                        <i className="bi bi-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="col-md-3">
+                                <select 
+                                    className="form-select"
+                                    value={selectedStatus}
+                                    onChange={(e) => setSelectedStatus(e.target.value)}
+                                >
+                                    <option value="all">All Statuses</option>
+                                    <option value="published">Published</option>
+                                    <option value="draft">Draft</option>
+                                </select>
+                            </div>
+                            <div className="col-md-3">
+                                <div className="text-md-end">
+                                    <span className="text-muted">
+                                        {filteredPages.length} items
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 {loading ? (
                     <Loader text="Loading Pages..." />
-                ) : pages.length === 0 ? (
-                    <div className="card shadow-sm">
-                        <div className="card-body text-center py-5">
-                            <h5 className="text-muted mb-3">No pages found</h5>
-                            <Link 
-                                to="/admin/create-page" 
-                                className="btn btn-primary"
-                            >
-                                Create Your First Page
-                            </Link>
+                ) : filteredPages.length === 0 ? (
+                    <div className="wp-admin-empty-state">
+                        <div className="card shadow-sm">
+                            <div className="card-body text-center py-5">
+                                <h5 className="text-muted mb-3">No pages found</h5>
+                                <Link 
+                                    to="/admin/create-page" 
+                                    className="btn btn-primary"
+                                >
+                                    Create Your First Page
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 ) : (
-                    <div className="card shadow-sm">
-                        <div className="card-body p-0">
-                            <div className="table-responsive">
-                                <table className="table table-hover mb-0">
-                                    <thead className="bg-light">
-                                        <tr>
-                                            <th width="5%">#</th>
-                                            <th width="20%">Title</th>
-                                            <th width="15%">Slug</th>
-                                            <th width="25%">Preview</th>
-                                            <th width="10%">Author</th>
-                                            <th width="15%">Created</th>
-                                            <th width="10%">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {pages.map((p, i) => (
-                                            <tr key={i}>
-                                                <td>{i + 1}</td>
-                                                <td>
-                                                    <Link 
-                                                        to={`/admin/page/edit/${p.slug}`}
-                                                        className="text-dark font-weight-bold"
-                                                    >
-                                                        {p.title}
-                                                    </Link>
-                                                </td>
-                                                <td>
-                                                    <span className="badge bg-light text-dark font-monospace">
-                                                        /{p.slug}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <div className="text-truncate" style={{ maxWidth: '300px' }}>
-                                                        {parse(p.content.slice(0, 100))}...
-                                                    </div>
-                                                </td>
-                                                <td>{p.author?.name || 'N/A'}</td>
-                                                <td>
-                                                    <small className="text-muted">
-                                                        {dayjs(p.createdAt).format("DD MMM YYYY")}
-                                                    </small>
-                                                </td>
-                                                <td>
-                                                    <div className="btn-group btn-group-sm">
-                                                        <Link 
-                                                            to={`/page/${p.slug}`}
-                                                            className="btn btn-outline-primary"
-                                                            title="View"
-                                                        >
-                                                            <i className="bi bi-eye-fill"></i>
-                                                        </Link>
-                                                        <Link 
-                                                            to={`/admin/page/edit/${p.slug}`}
-                                                            className="btn btn-outline-success"
-                                                            title="Edit"
-                                                        >
-                                                            <i className="bi bi-pencil-fill"></i>
-                                                        </Link>
-                                                        <button
-                                                            onClick={() => deletePageBySlug(p.slug)}
-                                                            className="btn btn-outline-danger"
-                                                            title="Delete"
-                                                        >
-                                                            <i className="bi bi-trash-fill"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
+                    <div className="wp-admin-list-table">
+                        <div className="card shadow-sm">
+                            <div className="card-body p-0">
+                                <div className="table-responsive">
+                                    <table className="table wp-list-table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th width="40%">Title</th>
+                                                <th width="15%">Author</th>
+                                                <th width="15%">Status</th>
+                                                <th width="15%">Date</th>
+                                                <th width="15%">Actions</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            {filteredPages.map((p, i) => (
+                                                <tr key={i} className="wp-list-item">
+                                                    <td>
+                                                        <div className="d-flex align-items-center">
+                                                            <Link 
+                                                                to={`/admin/page/edit/${p.slug}`}
+                                                                className="wp-list-item-title"
+                                                            >
+                                                                <strong>{p.title}</strong>
+                                                            </Link>
+                                                            <span className="wp-list-item-slug ms-2">
+                                                                /{p.slug}
+                                                            </span>
+                                                        </div>
+                                                        <div className="wp-list-item-excerpt text-muted">
+                                                            {parse(p.content.slice(0, 100))}...
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span className="wp-list-item-author">
+                                                            {p.author?.name || 'N/A'}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span className={`badge wp-status-${p.status || 'published'}`}>
+                                                            {p.status || 'published'}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span className="wp-list-item-date">
+                                                            {dayjs(p.createdAt).format("MMM D, YYYY")}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div className="btn-group btn-group-sm wp-list-actions">
+                                                            <Link 
+                                                                to={`/page/${p.slug}`}
+                                                                className="btn btn-light"
+                                                                title="View"
+                                                            >
+                                                                <i className="bi bi-eye"></i>
+                                                            </Link>
+                                                            <Link 
+                                                                to={`/admin/page/edit/${p.slug}`}
+                                                                className="btn btn-light"
+                                                                title="Edit"
+                                                            >
+                                                                <i className="bi bi-pencil"></i>
+                                                            </Link>
+                                                            <button
+                                                                onClick={() => deletePageBySlug(p.slug)}
+                                                                className="btn btn-light text-danger"
+                                                                title="Delete"
+                                                            >
+                                                                <i className="bi bi-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
