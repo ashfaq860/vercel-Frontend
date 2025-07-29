@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import AdminLayout from "../../components/layout/adminLayout";
-import './addPage.css';
+import './addCat.css';
 import { useSelector } from 'react-redux';
 import { submitPageChanges, getPageBySlug } from "../../api/internal";
 import { useNavigate, useParams } from "react-router-dom";
@@ -25,9 +25,9 @@ const EditPage = () => {
         try {
             const res = await getPageBySlug(pSlug);
             if (res.status === 200) {
+                setTitle(res.data.page.title);
                 setSlug(res.data.page.slug);
                 setContent(res.data.page.content);
-                setTitle(res.data.page.title);
             }
         } catch (error) {
             console.error("Error fetching page:", error);
@@ -40,7 +40,8 @@ const EditPage = () => {
         fetchPageData();
     }, [pSlug]);
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         if (!title || !slug || !content) {
             alert("Please fill all fields!");
             return;
@@ -65,8 +66,12 @@ const EditPage = () => {
         }
     };
 
-    const handleTitleChange = (value) => {
-        setTitle(value);
+    const handleTitleChange = (e) => {
+        setTitle(e.target.value);
+    };
+
+    const handleSlugChange = (e) => {
+        setSlug(e.target.value);
     };
 
     return (
@@ -80,7 +85,7 @@ const EditPage = () => {
                     <div className="d-flex align-items-center justify-content-between">
                         <GoBack link="/admin/all-pages" title="Go Back" />
                         <h1>Update Page</h1>
-                        <div style={{ width: '100px' }}></div> {/* Spacer for alignment */}
+                        <div style={{ width: '100px' }}></div>
                     </div>
                     <p className="text-muted">Edit the page details below</p>
                 </div>
@@ -92,62 +97,64 @@ const EditPage = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="page-form-container">
-                        <div className="form-group">
-                            <label htmlFor="title">Page Title</label>
-                            <input
-                                type="text"
-                                id="title"
-                                className="form-control modern-input"
-                                onChange={(e) => handleTitleChange(e.target.value)}
-                                value={title}
-                                placeholder="Enter page title"
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="slug">Page Slug</label>
-                            <input
-                                type="text"
-                                id="slug"
-                                className="form-control modern-input"
-                                onChange={(e) => setSlug(e.target.value)}
-                                value={slug}
-                                placeholder="page-slug"
-                            />
-                            <small className="text-muted">URL-friendly version of the title</small>
-                        </div>
-
-                        <div className="form-group">
-                            <label>Page Content</label>
-                            <div className="editor-container">
-                                <JoditEditor
-                                    ref={editor}
-                                    value={content}
-                                    onChange={newContent => setContent(newContent)}
-                                    config={{
-                                        buttons: ['bold', 'italic', 'link', 'unlink', 'ul', 'ol', 'font', 'fontsize', 'image'],
-                                        height: 400,
-                                    }}
+                    <form onSubmit={handleSubmit}>
+                        <div className="page-form-container">
+                            <div className="form-group">
+                                <label htmlFor="title">Page Title</label>
+                                <input
+                                    type="text"
+                                    id="title"
+                                    className="form-control modern-input"
+                                    onChange={handleTitleChange}
+                                    value={title}
+                                    placeholder="Enter page title"
                                 />
                             </div>
-                        </div>
 
-                        <div className="form-actions">
-                            <button
-                                type="button"
-                                onClick={handleSubmit}
-                                className="btn btn-primary submit-btn"
-                                disabled={isSubmitting || isLoading}
-                            >
-                                <LoadingButton 
-                                    loading={isSubmitting} 
-                                    title="Update Page Changes" 
-                                    loadingText="Saving Changes..."
+                            <div className="form-group">
+                                <label htmlFor="slug">Page Slug</label>
+                                <input
+                                    type="text"
+                                    id="slug"
+                                    className="form-control modern-input"
+                                    onChange={handleSlugChange}
+                                    value={slug}
+                                    placeholder="page-slug"
                                 />
-                            </button>
+                                <small className="text-muted">URL-friendly version of the title</small>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Page Content</label>
+                                <div className="editor-container">
+                                    <JoditEditor
+                                        ref={editor}
+                                        value={content}
+                                        onChange={newContent => setContent(newContent)}
+                                        config={{
+                                            buttons: ['bold', 'italic', 'link', 'unlink', 'ul', 'ol', 'font', 'fontsize', 'image'],
+                                            height: 400,
+                                            readonly: false // Ensure editor is not readonly
+                                        }}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-actions">
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary submit-btn"
+                                    disabled={isSubmitting || isLoading}
+                                >
+                                    <LoadingButton 
+                                        loading={isSubmitting} 
+                                        title="Update Page Changes" 
+                                        loadingText="Saving Changes..."
+                                    />
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 )}
             </div>
         </AdminLayout>
