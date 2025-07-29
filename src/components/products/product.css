@@ -121,7 +121,7 @@ color:#fff !important;
  
   will-change: transform, opacity;
   border: 1px solid #eee;
-  overflow: hidden;
+  
 }
 
 .card.visible {
