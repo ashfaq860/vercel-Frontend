@@ -95,7 +95,7 @@ const AddProduct = () => {
         setLoading(true);
         const data = {
             ...values,
-            category: values.vehicle,
+          
             photo,
             author
         };
