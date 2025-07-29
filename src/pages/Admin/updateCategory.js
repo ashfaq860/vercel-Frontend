@@ -16,6 +16,7 @@ const UpdateCategory = () => {
     const [name, setName] = useState('');
     const [slug, setSlug] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isManualSlug, setIsManualSlug] = useState(false);
    
     const author = useSelector(state => state.user._id);
 
@@ -27,13 +28,11 @@ const UpdateCategory = () => {
         const file = e.target.files[0];
         if (!file) return;
 
-        // Validate image type
         if (!file.type.match('image.*')) {
             toast.error('Please select an image file (JPEG, PNG)');
             return;
         }
 
-        // Validate image size (5MB limit)
         if (file.size > 5 * 1024 * 1024) {
             toast.error('Image size must be less than 5MB');
             return;
@@ -52,6 +51,30 @@ const UpdateCategory = () => {
             fileInputRef.current.value = '';
         }
     };
+
+    const generateSlug = (name) => {
+        return name
+            .toLowerCase()
+            .replace(/\s+/g, '-')         // Replace spaces with -
+            .replace(/[^\w\-]+/g, '')     // Remove all non-word chars
+            .replace(/\-\-+/g, '-')       // Replace multiple - with single -
+            .replace(/^-+/, '')           // Trim - from start
+            .replace(/-+$/, '');          // Trim - from end
+    }
+
+    const handleNameChange = (e) => {
+        const newName = e.target.value;
+        setName(newName);
+        if (!isManualSlug) {
+            setSlug(generateSlug(newName));
+        }
+    }
+
+    const handleSlugChange = (e) => {
+        const newSlug = e.target.value;
+        setSlug(newSlug);
+        setIsManualSlug(newSlug !== generateSlug(name));
+    }
 
     const getSelectedCat = async () => {
         try {
@@ -76,7 +99,7 @@ const UpdateCategory = () => {
         setLoading(true);
         const data = {
             name,
-            slug,
+            slug: generateSlug(slug), // Ensure properly formatted slug
             categoryId: id,
             photo: photo
         };
@@ -115,7 +138,7 @@ const UpdateCategory = () => {
                             type="text" 
                             className="form-control" 
                             id="catName" 
-                            onChange={(e) => setName(e.target.value)} 
+                            onChange={handleNameChange} 
                             value={name || ""} 
                             placeholder="Category Name" 
                         />
@@ -127,11 +150,11 @@ const UpdateCategory = () => {
                             type="text" 
                             className="form-control text-lowercase" 
                             id="slug" 
-                            onChange={(e) => setSlug(e.target.value)} 
+                            onChange={handleSlugChange} 
                             value={slug || ""} 
                             placeholder="slug" 
                         />
-                        <label htmlFor="slug">Category Slug</label>
+                        <label htmlFor="slug">URL Slug {isManualSlug && "(custom)"}</label>
                     </div>
 
                     <div className="mb-3">
