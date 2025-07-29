@@ -118,7 +118,7 @@ color:#fff !important;
 
 .card {
   transition: all 0.5s ease;
-  backface-visibility: hidden;
+ 
   will-change: transform, opacity;
   border: 1px solid #eee;
   overflow: hidden;
@@ -169,7 +169,7 @@ color:#fff !important;
 .sale-label {
   position: absolute;
   top: 10px;
-  right: 10px;
+  right: -12px;
   padding: 3px 8px;
   border-radius: 3px;
   font-size: 12px;
