@@ -5,7 +5,7 @@ import { submitPageContent } from "../../api/internal";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
 import JoditEditor from 'jodit-react';
-import './addpage.css';
+import './addPage.css';
 const CreatePage = () => {
     const [title, setTitle] = useState('');
     const [slug, setSlug] = useState('');
