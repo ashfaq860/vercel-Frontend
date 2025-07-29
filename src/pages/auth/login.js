@@ -11,7 +11,7 @@ import LoadingButton from "../loader/loadingButton";
 import toast from "react-hot-toast";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import { FiEye, FiEyeOff, FiMail, FiPhone, FiLock } from "react-icons/fi";
+import { FaEye, FaEyeSlash, FaEnvelope, FaPhone, FaLock } from "react-icons/fa";
 
 const Login = () => {
     const [error, setError] = useState("");
@@ -133,139 +133,115 @@ const Login = () => {
 
     return (
         <Layout>
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 p-4">
-                <div className="w-full max-w-md">
-                    <div className="bg-white rounded-2xl shadow-xl overflow-hidden backdrop-filter backdrop-blur-lg bg-opacity-80 border border-white border-opacity-30">
-                        <div className="p-8">
-                            <div className="text-center mb-8">
-                                <h1 className="text-3xl font-bold text-gray-800">Welcome Back</h1>
-                                <p className="text-gray-600 mt-2">Login to access your account</p>
-                            </div>
+            <div className="d-flex align-items-center min-vh-100 bg-light">
+                <div className="container py-5">
+                    <div className="row justify-content-center">
+                        <div className="col-md-8 col-lg-6 col-xl-5">
+                            <div className="card shadow-sm border-0 rounded-4 overflow-hidden">
+                                <div className="card-body p-4 p-sm-5">
+                                    <div className="text-center mb-4">
+                                        <h2 className="fw-bold text-primary">Welcome Back</h2>
+                                        <p className="text-muted">Login to access your account</p>
+                                    </div>
 
-                            <form onSubmit={handleLogin} className="space-y-6">
-                                <div className="space-y-4">
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            {values.user.includes('@') ? (
-                                                <FiMail className="h-5 w-5 text-gray-400" />
-                                            ) : (
-                                                <FiPhone className="h-5 w-5 text-gray-400" />
+                                    <form onSubmit={handleLogin}>
+                                        <div className="mb-3">
+                                            <div className="input-group">
+                                                <span className="input-group-text bg-white border-end-0">
+                                                    {values.user.includes('@') ? <FaEnvelope className="text-muted" /> : <FaPhone className="text-muted" />}
+                                                </span>
+                                                <input
+                                                    type="text"
+                                                    name="user"
+                                                    onChange={handleChange}
+                                                    value={values.user}
+                                                    onBlur={handleBlur}
+                                                    className="form-control border-start-0"
+                                                    placeholder="Email or Phone Number"
+                                                />
+                                            </div>
+                                            {errors.email && touched.email && (
+                                                <div className="text-danger small mt-1">{errors.email}</div>
                                             )}
                                         </div>
-                                        <input
-                                            type="text"
-                                            name="user"
-                                            onChange={handleChange}
-                                            value={values.user}
-                                            onBlur={handleBlur}
-                                            className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                            placeholder="Email or Phone Number"
-                                        />
-                                        {errors.email && touched.email && (
-                                            <p className="mt-1 text-sm text-red-500">{errors.email}</p>
-                                        )}
-                                    </div>
 
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <FiLock className="h-5 w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="password"
-                                            name="password"
-                                            id="password"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            value={values.password}
-                                            className="block w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                            placeholder="Password"
-                                        />
-                                        {show && (
-                                            <button
-                                                type="button"
-                                                onClick={showPass}
-                                                className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                                            >
-                                                {eye ? (
-                                                    <FiEyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-                                                ) : (
-                                                    <FiEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                                        <div className="mb-3">
+                                            <div className="input-group">
+                                                <span className="input-group-text bg-white border-end-0">
+                                                    <FaLock className="text-muted" />
+                                                </span>
+                                                <input
+                                                    type="password"
+                                                    name="password"
+                                                    id="password"
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    value={values.password}
+                                                    className="form-control border-start-0 pe-5"
+                                                    placeholder="Password"
+                                                />
+                                                {show && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={showPass}
+                                                        className="position-absolute end-0 top-0 h-100 bg-transparent border-0 px-3"
+                                                        style={{ zIndex: 5 }}
+                                                    >
+                                                        {eye ? <FaEyeSlash className="text-muted" /> : <FaEye className="text-muted" />}
+                                                    </button>
                                                 )}
-                                            </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="d-flex justify-content-between align-items-center mb-4">
+                                            <div className="form-check">
+                                                <input
+                                                    className="form-check-input"
+                                                    type="checkbox"
+                                                    id="rememberMe"
+                                                    name="isRememberMe"
+                                                    checked={values.isRememberMe}
+                                                    onChange={handleChange}
+                                                />
+                                                <label className="form-check-label small" htmlFor="rememberMe">
+                                                    Remember me
+                                                </label>
+                                            </div>
+                                            <Link to="/forgotpassword" className="small text-decoration-none">Forgot password?</Link>
+                                        </div>
+
+                                        <button
+                                            type="submit"
+                                            disabled={loading}
+                                            className="btn btn-primary w-100 py-2 mb-3"
+                                        >
+                                            <LoadingButton loading={loading} title="Sign In" />
+                                        </button>
+
+                                        {error && (
+                                            <div className="alert alert-danger small mb-3">{error}</div>
                                         )}
-                                    </div>
+
+                                        <div className="d-flex align-items-center my-4">
+                                            <hr className="flex-grow-1" />
+                                            <span className="px-3 text-muted small">OR</span>
+                                            <hr className="flex-grow-1" />
+                                        </div>
+
+                                        <div className="d-flex justify-content-center mb-3">
+                                            <GoogleLogin
+                                                onSuccess={handleGoogleSuccess}
+                                                onError={() => toast.error("Google login failed.")}
+                                            />
+                                        </div>
+
+                                        <div className="text-center mt-4">
+                                            <p className="small text-muted">Don't have an account?{' '}
+                                                <Link to="/register" className="text-decoration-none">Sign up</Link>
+                                            </p>
+                                        </div>
+                                    </form>
                                 </div>
-
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center">
-                                        <input
-                                            id="remember-me"
-                                            name="isRememberMe"
-                                            type="checkbox"
-                                            checked={values.isRememberMe}
-                                            onChange={handleChange}
-                                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                                        />
-                                        <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                                            Remember me
-                                        </label>
-                                    </div>
-
-                                    <div className="text-sm">
-                                        <Link to="/forgotpassword" className="font-medium text-blue-600 hover:text-blue-500">
-                                            Forgot password?
-                                        </Link>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <button
-                                        type="submit"
-                                        disabled={loading}
-                                        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all"
-                                    >
-                                        <LoadingButton loading={loading} title="Sign In" />
-                                    </button>
-                                </div>
-
-                                {error && (
-                                    <div className="text-center text-sm text-red-500">
-                                        {error}
-                                    </div>
-                                )}
-                            </form>
-
-                            <div className="mt-6">
-                                <div className="relative">
-                                    <div className="absolute inset-0 flex items-center">
-                                        <div className="w-full border-t border-gray-300"></div>
-                                    </div>
-                                    <div className="relative flex justify-center text-sm">
-                                        <span className="px-2 bg-white text-gray-500">Or continue with</span>
-                                    </div>
-                                </div>
-
-                                <div className="mt-6 grid grid-cols-1 gap-3">
-                                    <div className="flex justify-center">
-                                        <GoogleLogin
-                                            onSuccess={handleGoogleSuccess}
-                                            onError={() => toast.error("Google login failed.")}
-                                            shape="pill"
-                                            theme="filled_blue"
-                                            size="large"
-                                            text="continue_with"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="mt-6 text-center">
-                                <p className="text-sm text-gray-600">
-                                    Don't have an account?{' '}
-                                    <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500">
-                                        Sign up
-                                    </Link>
-                                </p>
                             </div>
                         </div>
                     </div>
