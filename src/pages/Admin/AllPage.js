@@ -6,7 +6,7 @@ import Loader from "../loader/loader";
 import { deletePage, getAllPages } from "../../api/internal";
 import parse from 'html-react-parser';
 const dayjs = require('dayjs');
-import './allPage';
+import './allPage.css';
 
 const AllPages = () => {
     const [pages, setPages] = useState([]);
