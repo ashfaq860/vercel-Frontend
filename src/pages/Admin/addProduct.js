@@ -182,19 +182,19 @@ const AddProduct = () => {
                                 <div className="mb-3">
                                     <label className="form-label">Select Vehicle*</label>
                                     <select 
-                                        className={`form-select ${errors.vehicle && touched.vehicle ? 'is-invalid' : ''}`}
+                                        className={`form-select ${errors.category && touched.category ? 'is-invalid' : ''}`}
                                         onChange={handleChange} 
                                         onBlur={handleBlur} 
-                                        name="vehicle"
-                                        value={values.vehicle}
+                                        name="category"
+                                        value={values.category}
                                     >
                                         <option value="">Select Vehicle</option>
                                         {categories.map((cat, i) => (
                                             <option key={i} value={cat._id}>{cat.name}</option>
                                         ))}
                                     </select>
-                                    {errors.vehicle && touched.vehicle && (
-                                        <div className="invalid-feedback">{errors.vehicle}</div>
+                                    {errors.category && touched.category && (
+                                        <div className="invalid-feedback">{errors.category}</div>
                                     )}
                                 </div>
 
