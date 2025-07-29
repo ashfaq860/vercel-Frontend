@@ -1,12 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import AdminLayout from "../../components/layout/adminLayout";
-import './addCat.css';
 import { useSelector } from 'react-redux';
 import { submitPageContent } from "../../api/internal";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
 import JoditEditor from 'jodit-react';
-
+import './addpage.css';
 const CreatePage = () => {
     const [title, setTitle] = useState('');
     const [slug, setSlug] = useState('');
@@ -16,8 +15,19 @@ const CreatePage = () => {
     const editor = useRef(null);
     const author = useSelector(state => state.user._id);
 
+    // Jodit editor configuration
+    const editorConfig = useMemo(() => ({
+        readonly: false,
+        placeholder: 'Start typing your content here...',
+        buttons: ['bold', 'italic', 'link', 'unlink', 'ul', 'ol', 'font', 'fontsize', 'image'],
+        height: 400,
+        removeButtons: ['source'],
+        toolbarAdaptive: true, // Makes toolbar responsive
+        toolbarSticky: true,
+    }), []);
+
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent default form behavior
+        e.preventDefault();
         
         if (!title || !slug || !content) {
             alert("Please fill all fields!");
@@ -55,65 +65,94 @@ const CreatePage = () => {
                 <title>Create New Page</title>
             </Helmet>
             
-            <div className="admin-page-container">
-                <div className="admin-page-header">
-                    <h1>Create New Page</h1>
-                    <p className="text-muted">Fill in the details below to create a new page</p>
-                </div>
-
-                <form onSubmit={handleSubmit}> {/* Wrap in form element */}
-                    <div className="page-form-container">
-                        <div className="form-group">
-                            <label htmlFor="title">Page Title</label>
-                            <input
-                                type="text"
-                                id="title"
-                                className="form-control modern-input"
-                                onChange={handleTitleChange}
-                                value={title}
-                                placeholder="Enter page title"
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="slug">Page Slug</label>
-                            <input
-                                type="text"
-                                id="slug"
-                                className="form-control modern-input"
-                                onChange={(e) => setSlug(e.target.value)}
-                                value={slug}
-                                placeholder="page-slug"
-                            />
-                            <small className="text-muted">URL-friendly version of the title</small>
-                        </div>
-
-                        <div className="form-group">
-                            <label>Page Content</label>
-                            <div className="editor-container">
-                                <JoditEditor
-                                    ref={editor}
-                                    value={content}
-                                    onChange={newContent => setContent(newContent)}
-                                    config={{
-                                        buttons: ['bold', 'italic', 'link', 'unlink', 'ul', 'ol', 'font', 'fontsize', 'image'],
-                                        height: 400,
-                                    }}
-                                />
+            <div className="container-fluid py-4">
+                <div className="row justify-content-center">
+                    <div className="col-12 col-lg-10 col-xl-8">
+                        <div className="card shadow-sm mb-4">
+                            <div className="card-header bg-white py-3">
+                                <h1 className="h4 mb-0">Create New Page</h1>
+                                <p className="text-muted mb-0">Fill in the details below to create a new page</p>
+                            </div>
+                            
+                            <div className="card-body">
+                                <form onSubmit={handleSubmit}>
+                                    <div className="row g-3">
+                                        <div className="col-12 col-md-6">
+                                            <div className="form-floating mb-3">
+                                                <input
+                                                    type="text"
+                                                    id="title"
+                                                    className="form-control"
+                                                    onChange={handleTitleChange}
+                                                    value={title}
+                                                    placeholder="Enter page title"
+                                                    required
+                                                />
+                                                <label htmlFor="title">Page Title</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="col-12 col-md-6">
+                                            <div className="form-floating mb-3">
+                                                <input
+                                                    type="text"
+                                                    id="slug"
+                                                    className="form-control"
+                                                    onChange={(e) => setSlug(e.target.value)}
+                                                    value={slug}
+                                                    placeholder="page-slug"
+                                                    required
+                                                />
+                                                <label htmlFor="slug">Page Slug</label>
+                                                <small className="text-muted ms-2">URL-friendly version</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="col-12">
+                                            <div className="mb-3">
+                                                <label htmlFor="content" className="form-label">Page Content</label>
+                                                <div className="border rounded overflow-hidden">
+                                                    <JoditEditor
+                                                        ref={editor}
+                                                        value={content}
+                                                        config={editorConfig}
+                                                        tabIndex={1}
+                                                        onBlur={newContent => setContent(newContent)}
+                                                        onChange={newContent => setContent(newContent)}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="col-12">
+                                            <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-outline-secondary me-md-2"
+                                                    onClick={() => navigate('/admin/all-pages')}
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    type="submit"
+                                                    className="btn btn-primary"
+                                                    disabled={isSubmitting}
+                                                >
+                                                    {isSubmitting ? (
+                                                        <>
+                                                            <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                                                            Creating...
+                                                        </>
+                                                    ) : 'Create Page'}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-
-                        <div className="form-actions">
-                            <button
-                                type="submit"
-                                className="btn btn-primary submit-btn"
-                                disabled={isSubmitting}
-                            >
-                                {isSubmitting ? 'Creating...' : 'Create Page'}
-                            </button>
-                        </div>
                     </div>
-                </form>
+                </div>
             </div>
         </AdminLayout>
     )
