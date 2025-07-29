@@ -9,7 +9,7 @@ input[type="file"]::file-selector-button {
     text-decoration:none;
 
 }
-/* update category page style*/
+
 .update-category-container {
   max-width: 800px;
   margin: 2rem auto;
