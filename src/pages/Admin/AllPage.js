@@ -58,6 +58,7 @@ const AllPages = () => {
 
     return (
         <AdminLayout>
+<div className="col-10 col-sm-3">
             <div className="wp-admin-pages">
                 <div className="wp-admin-header">
                     <div className="d-flex justify-content-between align-items-center mb-4">
@@ -208,6 +209,7 @@ const AllPages = () => {
                     </div>
                 )}
             </div>
+                    </div>
         </AdminLayout>
     );
 };
