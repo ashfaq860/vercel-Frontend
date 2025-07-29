@@ -87,6 +87,7 @@ const AllOrders = () => {
 
     return (
         <AdminLayout>
+          <div className="col-auto col-md-9 col-xl-10 px-sm-10">
             <div className="container-fluid py-3">
                 <div className="card border-0 shadow-sm">
                     <div className="card-header bg-white border-bottom-0 py-3">
@@ -205,6 +206,7 @@ const AllOrders = () => {
                     )}
                 </div>
             </div>
+                        </div>
         </AdminLayout>
     );
 };
