@@ -1,104 +1,158 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminLayout from "../../components/layout/adminLayout";
-import './addCat.css';
 import { useSelector } from 'react-redux';
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Loader from "../loader/loader";
 import { deletePage, getAllPages } from "../../api/internal";
 import parse from 'html-react-parser';
 const dayjs = require('dayjs');
+import './allPage';
 
 const AllPages = () => {
-
     const [pages, setPages] = useState([]);
+    const [loading, setLoading] = useState(true);
     const author = useSelector(state => state.user._id);
-    //console.log(author);
+
     const getPages = async () => {
-        const response = await getAllPages();
-        if (response.status === 200) {
-            console.log(response.data.pages);
-            setPages(response.data.pages);
+        setLoading(true);
+        try {
+            const response = await getAllPages();
+            if (response.status === 200) {
+                setPages(response.data.pages);
+            }
+        } catch (error) {
+            console.error("Error fetching pages:", error);
+        } finally {
+            setLoading(false);
         }
     }
+
     useEffect(() => {
         getPages();
     }, []);
-   /* const markProductFeatured = async (e, id) => {
 
-        const data = {
-             mark: e,
-            _id: id
-        }
-        const res = await markFeatured(data);
-
-        if (res.status == 200) {
-            getProducts();
-        }
-    }
-    */
-    const deletePageBySlug = async (e) => {
-        const check = window.confirm("Do you want to delete Page?");
+    const deletePageBySlug = async (slug) => {
+        const check = window.confirm("Are you sure you want to delete this page?");
         if (check) {
-          
-          const response = await deletePage(e);
-            if (response.status == 200) {
-                getPages();
+            try {
+                const response = await deletePage(slug);
+                if (response.status === 200) {
+                    getPages();
+                }
+            } catch (error) {
+                console.error("Error deleting page:", error);
             }
-        
         }
     }
 
-    return (<>
+    return (
         <AdminLayout>
-            {pages.length === 0 ? (<><Loader text="Pages" /></>)
-                : (<>
-                    <div className="col-auto col-sm-8 col-md-9 col-xl-10 px-sm-10">
-                        <h1 className="text-center m-3">All Products</h1>
-                        <div className="table-responsive">
-                            <table className="table align-middle">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Title</th>
-                                        <th scope="col">Slug</th>
-                                        <th scope="col">Content</th>
-                                        <th scope="col">Author</th>
-                                        <th scope="col">Created AT</th>
-                                        <th scope="col" colSpan="3">Action</th>
+            <div className="container-fluid py-4">
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h1 className="h3 mb-0 text-gray-800">All Pages</h1>
+                    <Link 
+                        to="/admin/create-page" 
+                        className="btn btn-primary btn-sm"
+                    >
+                        <span className="d-none d-md-inline">Create New Page</span>
+                        <span className="d-inline d-md-none">+ New</span>
+                    </Link>
+                </div>
 
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    {
-                                        pages.map((p, i) => (
-                                            <tr key={i}>
-                                                <th scope="row">{i + 1}</th>
-                                                <td>{p.title}</td>
-                                                <td>{p.slug}</td>
-                                                <td><Link to={`/admin/page/edit/${p.slug}`}>{ parse((p.content.slice(0,150))) }. . .</Link></td>
-                                                <td>{p.author.name}</td>
-                                                <td>{dayjs(p.createdAt).format("DD/MM/YY HH:MM:ss")}</td>
-                                                <td>
-
-                                                    <Link onClick={() => deletePageBySlug(p.slug)}> <i className="bi bi-trash3 text-danger" aria-label={`Delete ${p.title}!`} title={` Click to delete ${p.title}!`}></i> </Link>
-
-                                                    |
-
-                                                    <Link to={`/admin/page/edit/${p.slug}`}> <i class="bi bi-pencil-square" title={`Add or Change Product Photoes!`}></i></Link>
-
-                                                </td>
-                                            </tr>
-  ))
-                                    }
-                                </tbody>
-                            </table>
+                {loading ? (
+                    <Loader text="Loading Pages..." />
+                ) : pages.length === 0 ? (
+                    <div className="card shadow-sm">
+                        <div className="card-body text-center py-5">
+                            <h5 className="text-muted mb-3">No pages found</h5>
+                            <Link 
+                                to="/admin/create-page" 
+                                className="btn btn-primary"
+                            >
+                                Create Your First Page
+                            </Link>
                         </div>
                     </div>
-                </>)}
+                ) : (
+                    <div className="card shadow-sm">
+                        <div className="card-body p-0">
+                            <div className="table-responsive">
+                                <table className="table table-hover mb-0">
+                                    <thead className="bg-light">
+                                        <tr>
+                                            <th width="5%">#</th>
+                                            <th width="20%">Title</th>
+                                            <th width="15%">Slug</th>
+                                            <th width="25%">Preview</th>
+                                            <th width="10%">Author</th>
+                                            <th width="15%">Created</th>
+                                            <th width="10%">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {pages.map((p, i) => (
+                                            <tr key={i}>
+                                                <td>{i + 1}</td>
+                                                <td>
+                                                    <Link 
+                                                        to={`/admin/page/edit/${p.slug}`}
+                                                        className="text-dark font-weight-bold"
+                                                    >
+                                                        {p.title}
+                                                    </Link>
+                                                </td>
+                                                <td>
+                                                    <span className="badge bg-light text-dark font-monospace">
+                                                        /{p.slug}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div className="text-truncate" style={{ maxWidth: '300px' }}>
+                                                        {parse(p.content.slice(0, 100))}...
+                                                    </div>
+                                                </td>
+                                                <td>{p.author?.name || 'N/A'}</td>
+                                                <td>
+                                                    <small className="text-muted">
+                                                        {dayjs(p.createdAt).format("DD MMM YYYY")}
+                                                    </small>
+                                                </td>
+                                                <td>
+                                                    <div className="btn-group btn-group-sm">
+                                                        <Link 
+                                                            to={`/page/${p.slug}`}
+                                                            className="btn btn-outline-primary"
+                                                            title="View"
+                                                        >
+                                                            <i className="bi bi-eye-fill"></i>
+                                                        </Link>
+                                                        <Link 
+                                                            to={`/admin/page/edit/${p.slug}`}
+                                                            className="btn btn-outline-success"
+                                                            title="Edit"
+                                                        >
+                                                            <i className="bi bi-pencil-fill"></i>
+                                                        </Link>
+                                                        <button
+                                                            onClick={() => deletePageBySlug(p.slug)}
+                                                            className="btn btn-outline-danger"
+                                                            title="Delete"
+                                                        >
+                                                            <i className="bi bi-trash-fill"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
         </AdminLayout>
-    </>)
-
+    )
 }
+
 export default AllPages;
