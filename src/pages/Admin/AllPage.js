@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import AdminLayout from "../../components/layout/adminLayout";
 import Loader from "../loader/loader";
 import { deletePage, getAllPages } from "../../api/internal";
-import './allPage.css';
+import './pageList.css';
 
 const AllPages = () => {
     const [pages, setPages] = useState([]);
