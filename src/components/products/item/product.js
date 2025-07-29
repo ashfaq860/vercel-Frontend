@@ -36,7 +36,7 @@ const Product = (props) => {
 		<div className="col-12 col-sm-6 col-lg-3 text-center mt-3">
 			<div className="card scroll-animate visible" >
 				<Link to={`/parts/${props._id}`}>		
-	<img src={`${process.env.REACT_APP_INTERNAL_API_PATH}/${ props.photo}`} className="card-img-top" alt={`${props.name}`} height="220" />
+	<img src={`${ props.photo}`} className="card-img-top" alt={`${props.name}`} height="220" />
 	</Link>
 				{props.latestProducts === true ? (<><span className="new-product-label">New</span></>):(<></>)}
 				{props.discount > 0 ? (<><span className="sale-label">-11%</span></>) : (<></>)}
