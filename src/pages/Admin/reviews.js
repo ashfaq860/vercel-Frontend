@@ -107,6 +107,7 @@ const ProductReviews = () => {
 
     return (
         <AdminLayout>
+        <div className="col-auto col-md-9 col-xl-10 px-sm-10">
             <div className="container-fluid py-4">
                 <div className="card shadow-lg">
                     <div className="card-header bg-white border-bottom-0 py-3">
@@ -294,6 +295,7 @@ const ProductReviews = () => {
                     </button>
                 </div>
             </div>
+                            </div>
         </AdminLayout>
     );
 };
