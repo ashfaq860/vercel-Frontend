@@ -128,7 +128,7 @@ const UpdateCategory = () => {
         <AdminLayout>
             <div className="col-auto col-md-9 col-xl-10 px-sm-10">
                 <h1 className="text-center p-3">
-                    <GoBack link="/admin/catList" title="Go Back" />
+                    <GoBack link="/admin/catList" title="Go Back" /> <br />
                     <b>Update Category</b>
                 </h1>
                 
