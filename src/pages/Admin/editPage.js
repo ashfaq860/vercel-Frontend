@@ -1,107 +1,157 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import AdminLayout from "../../components/layout/adminLayout";
-import './addCat.css';
+import './addPage.css';
 import { useSelector } from 'react-redux';
-import { submitPageChanges,getPageBySlug } from "../../api/internal";
-import { useNavigate,useParams } from "react-router-dom";
+import { submitPageChanges, getPageBySlug } from "../../api/internal";
+import { useNavigate, useParams } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
-
-import { useEffect } from "react";
 import JoditEditor from 'jodit-react';
 import LoadingButton from "../loader/loadingButton";
 import GoBack from "../loader/goBack";
 
 const EditPage = () => {
-    <Helmet><title>Edit Page</title></Helmet>
     const editor = useRef(null);
     const [title, setTitle] = useState('');
     const [slug, setSlug] = useState('');
     const [content, setContent] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
     const author = useSelector(state => state.user._id);
     const { pSlug } = useParams();
-    const [loading, setLoading] = useState(false);
-    //setSlug(useParams().slug);
-    const getPageBySlugData = async () => {
-        const res = await getPageBySlug(pSlug);
-        if (res.status == 200) {
-            setSlug(res.data.page.slug);
-            setContent(res.data.page.content);
-            setTitle(res.data.page.title);
-        }
+
+    const fetchPageData = async () => {
+        setIsLoading(true);
+        try {
+            const res = await getPageBySlug(pSlug);
+            if (res.status === 200) {
+                setSlug(res.data.page.slug);
+                setContent(res.data.page.content);
+                setTitle(res.data.page.title);
             }
+        } catch (error) {
+            console.error("Error fetching page:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
-        getPageBySlugData();
-    },[pSlug]);
+        fetchPageData();
+    }, [pSlug]);
 
     const handleSubmit = async () => {
-        setLoading(true);
-        const data = {
-            title,
-            slug,
-            author,
-            content
-        };
+        if (!title || !slug || !content) {
+            alert("Please fill all fields!");
+            return;
+        }
+
+        setIsSubmitting(true);
+        
         try {
+            const data = { title, slug, author, content };
             const response = await submitPageChanges(data);
-            setLoading(false);
-            if (response.status == 201) {
+            
+            if (response.status === 201) {
                 navigate("/admin/all-pages");
             } else {
                 alert(response.message);
             }
         } catch (error) {
-            setLoading(false);
             alert(error.message);
-            console.log(error);
+            console.error(error);
+        } finally {
+            setIsSubmitting(false);
         }
-    }
-    const pageTitle = (value) => {
+    };
+
+    const handleTitleChange = (value) => {
         setTitle(value);
+    };
 
-       // setSlug(title.replace(' ', '-').toLowerCase());
-    }
-    return (<>
+    return (
         <AdminLayout>
-            <div className="col-auto col-md-9 col-xl-10 px-sm-10">
-
-                <h1 className="text-center p-3"> <GoBack link="/admin/all-pages" title="Go Back" /><b>Update Page</b></h1>
-                <div style={{ "width": "110vh", "margin": "auto" }}>
-                    <div className="form-floating mb-3" >
-                        <input type="text" class="form-control" id="title" onChange={(e) => pageTitle(e.target.value)} value={title} placeholder="Page Title" />
-                        <label for="floatingInput">Page Title</label>
+            <Helmet>
+                <title>Edit Page</title>
+            </Helmet>
+            
+            <div className="admin-page-container">
+                <div className="admin-page-header">
+                    <div className="d-flex align-items-center justify-content-between">
+                        <GoBack link="/admin/all-pages" title="Go Back" />
+                        <h1>Update Page</h1>
+                        <div style={{ width: '100px' }}></div> {/* Spacer for alignment */}
                     </div>
-                    <div className="form-floating">
-
-                        <input type="text" class="form-control" id="catName" onChange={(e) => setSlug(e.target.value)} value={slug} placeholder="Category Name" />
-                        <label for="floatingInput">Page Slug</label>
-                    </div>
-                    <div className="form-floating mt-3">
-                        {
-                          /*
-                          <textarea onChange={(e) => setContent(e.target.value)} placeholder="write page Content here..." style={{ 'width': '100%' }} value={content}>
-                          </textarea>
-                          */
-                        }
-                           <JoditEditor
-                                ref={editor}
-                                value={content}
-                              
-                               
-                                 // preferred to use only this option to update the content for performance reasons
-                                onChange={newContent => setContent(newContent)}
-                            />   
-                     </div>
-                
-                    <div className="mt-3">
-                        <button type="button" onClick={handleSubmit} className="btn btn-lg btn-primary" style={{ "width": "100%" }}><LoadingButton loading={loading} title="Update Page Changes" /> </button>
-                    </div>
+                    <p className="text-muted">Edit the page details below</p>
                 </div>
 
+                {isLoading ? (
+                    <div className="text-center py-5">
+                        <div className="spinner-border text-primary" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="page-form-container">
+                        <div className="form-group">
+                            <label htmlFor="title">Page Title</label>
+                            <input
+                                type="text"
+                                id="title"
+                                className="form-control modern-input"
+                                onChange={(e) => handleTitleChange(e.target.value)}
+                                value={title}
+                                placeholder="Enter page title"
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="slug">Page Slug</label>
+                            <input
+                                type="text"
+                                id="slug"
+                                className="form-control modern-input"
+                                onChange={(e) => setSlug(e.target.value)}
+                                value={slug}
+                                placeholder="page-slug"
+                            />
+                            <small className="text-muted">URL-friendly version of the title</small>
+                        </div>
+
+                        <div className="form-group">
+                            <label>Page Content</label>
+                            <div className="editor-container">
+                                <JoditEditor
+                                    ref={editor}
+                                    value={content}
+                                    onChange={newContent => setContent(newContent)}
+                                    config={{
+                                        buttons: ['bold', 'italic', 'link', 'unlink', 'ul', 'ol', 'font', 'fontsize', 'image'],
+                                        height: 400,
+                                    }}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="form-actions">
+                            <button
+                                type="button"
+                                onClick={handleSubmit}
+                                className="btn btn-primary submit-btn"
+                                disabled={isSubmitting || isLoading}
+                            >
+                                <LoadingButton 
+                                    loading={isSubmitting} 
+                                    title="Update Page Changes" 
+                                    loadingText="Saving Changes..."
+                                />
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
-
         </AdminLayout>
-    </>)
+    );
+};
 
-}
 export default EditPage;
