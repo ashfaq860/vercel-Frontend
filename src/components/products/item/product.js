@@ -5,7 +5,7 @@ import { addToCart } from "../../../store/cartSlice";
 import toast from 'react-hot-toast';
 import useScrollAnimation from "../../../pages/srollAnimation";
 const Product = (props) => {
-	useScrollAnimation();
+	//useScrollAnimation();
 	const dispatch = useDispatch();
 	//console.log(props);
 	const getAddToCart = (product) => {
