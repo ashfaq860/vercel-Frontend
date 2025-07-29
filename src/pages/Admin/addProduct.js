@@ -24,7 +24,7 @@ const AddProduct = () => {
         initialValues: {
             name: '',
             urduName: '',
-            vehicle: '',
+           
             model: '',
             manufacturer: '',
             p_price: '',
