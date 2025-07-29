@@ -107,7 +107,7 @@ const AllProducts = () => {
     return (
         <AdminLayout>
             <div className="col-auto col-md-9 col-xl-10 px-sm-10">
-                <div className="d-flex justify-content-between align-items-center mb-4">
+                <div className="d-flex justify-content-between align-items-center mb-4 mt-2">
                     <h1 className="h3 mb-0">All Products</h1>
                     <Link to="/admin/add-product" className="btn btn-primary">
                         <i className="bi bi-plus-lg me-2"></i>Add New Product
