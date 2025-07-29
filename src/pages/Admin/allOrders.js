@@ -1,135 +1,212 @@
 import { useEffect, useState } from "react";
 import AdminLayout from "../../components/layout/adminLayout";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getAllOrders, changeStatus } from "../../api/internal";
 import toast from 'react-hot-toast';
-import './order.css'
 import { Link } from "react-router-dom";
-import './sort.css';
 import Loader from "../loader/loader";
 import Pagination from "../../components/products/item/pagination";
+
 const AllOrders = () => {
-    const id = useSelector(state => state.user._id);
     const [orders, setOrders] = useState([]);
-    const [updateOrder, setUpdateOrder] = useState(0);
+    const [loading, setLoading] = useState(true);
     const [selectedStatus, setSelectedStatus] = useState("");
+    const [orderPerPage, setOrderPerPage] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1);
 
-  
     const getOrders = async () => {
-        const res = await getAllOrders();
-        // const res = await getUserOrders(id);
-        setOrders(res.data.orders);
-    }
-    const sortedOrders = [...orders].sort((a, b) => {
-        // If no selection, show default
-        if (!selectedStatus) return 0;
+        setLoading(true);
+        try {
+            const res = await getAllOrders();
+            setOrders(res.data.orders);
+        } catch (error) {
+            toast.error("Failed to load orders");
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        // Put selected status on top
+    const sortedOrders = [...orders].sort((a, b) => {
+        if (!selectedStatus) return 0;
         if (a.status === selectedStatus && b.status !== selectedStatus) return -1;
         if (b.status === selectedStatus && a.status !== selectedStatus) return 1;
-
-        return 0; // No change
+        return 0;
     });
-    // pagination functions
-    const [orderPerPage, setOrderPerPaage] = useState(10);
-    const [currentPage, setCurrentPage] = useState(1);
+
+    // Pagination
     const lastPostIndex = currentPage * orderPerPage;
     const firstPostIndex = lastPostIndex - orderPerPage;
     const currentOrders = (sortedOrders ?? orders).slice(firstPostIndex, lastPostIndex);
-    const cancelMyOrder = async (orderId, status) => {
-        const check = window.confirm("Do you really want to cancel the Order?");
+
+    const cancelOrder = async (orderId, status) => {
+        const check = window.confirm("Do you really want to cancel this order?");
         if (check) {
             if (status !== "Pending") {
-                toast.error("Your Order is in" + status + "! Your can't cancel now.")
+                toast.error(`Your order is ${status}! You can't cancel now.`);
                 return;
             }
-            const data = {
-                orderNo: orderId,
-                status: "Canceled"
-            }
-            const res = await changeStatus(data);
-            console.log(res)
-            if (res.data.status.modifiedCount === 1) {
-                setUpdateOrder(res.data.status.modifiedCount);
-                toast.error("Your Order has been cancel!");
-                getOrders();
+            try {
+                const data = { orderNo: orderId, status: "Canceled" };
+                const res = await changeStatus(data);
+                if (res.data.status.modifiedCount === 1) {
+                    toast.error("Order has been canceled!");
+                    getOrders();
+                }
+            } catch (error) {
+                toast.error("Failed to cancel order");
+                console.error(error);
             }
         }
-    }
+    };
 
     const handleSortChange = (e) => {
         setSelectedStatus(e.target.value);
+        setCurrentPage(1);
     };
 
-  
     useEffect(() => {
         getOrders();
     }, []);
 
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    };
 
+    const getStatusBadgeClass = (status) => {
+        switch(status.toLowerCase()) {
+            case 'pending': return 'bg-warning text-dark';
+            case 'processing': return 'bg-info text-white';
+            case 'shipped': return 'bg-primary text-white';
+            case 'delivered': return 'bg-success text-white';
+            case 'canceled': return 'bg-danger text-white';
+            default: return 'bg-secondary text-white';
+        }
+    };
 
-    return (<>
+    return (
         <AdminLayout>
-            {orders.length === 0 ? (<><Loader text="Products" /></>)
-                : (<>
-                    <div className="col-auto col-sm-8 col-md-9 col-xl-10 px-sm-10">
-                        <h2 className="text-center p-3">All Orders &nbsp;&nbsp;
-                    <label>
-                        
-                        <select id="sortOrder" value={selectedStatus} onChange={handleSortChange}>
-                            <option value="">-- Change Status --</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Processing">Processing</option>
-                            <option value="Shipped">Shipped</option>
-                            <option value="Delivered">Delivered</option>
-                            <option value="Canceled">Canceled</option>
-                            
-                           
-                            
-                            
-                        </select>
-                    </label>
-
-                </h2>
-                <div className="table-responsive">
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Customer</th>
-                                <th>Date</th>
-                                <th>Total</th>
-                                <th>Payment</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                                    {currentOrders.map(order => (
-                                <tr key={order._id} className={`status status-${order.status.toLowerCase()}`}>
-                                    <td className={`status status-${order.status}`}>{order.orderNumber}</td>
-                                    <td className={`status status-${order.status}`}>{order.shippingAddress.name}</td>
-                                    <td className={`status status-${order.status}`}>{order.createdAt}</td>
-                                    <td className={`status status-${order.status}`}>${order.total}</td>
-                                    <td className={`status status-${order.status}`}>{order.paymentMethod}</td>
-                                    <td className={`status status-${order.status}`}>
-                                        <span className={`status ${order.status}`}>
-                                            {order.status}
-                                        </span>
-                                    </td>
-                                    <td className={`status status-${order.status.toLowerCase()}`}>
-                                        <Link to={`/admin/order/viewDetails/${order.orderNumber}`} className="btn btn-primary" alt="View Detail" title="View Detail"><i className="bi bi-eye"></i></Link>
-                                        <button className="btn btn-danger" onClick={() => cancelMyOrder(order.orderNumber, order.status)} alt="Cancel Order" title="Cancel Order"><i className="bi bi-x-lg"></i></button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                            </table>
-                            <Pagination totalPosts={orders.length} postPerPage={orderPerPage} setCurrentPage={setCurrentPage} currentPage={currentPage} />
-                </div>
+            <div className="container-fluid py-3">
+                <div className="card border-0 shadow-sm">
+                    <div className="card-header bg-white border-bottom-0 py-3">
+                        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                            <h2 className="h5 mb-3 mb-md-0">Order Management</h2>
+                            <div className="d-flex align-items-center">
+                                <select 
+                                    className="form-select form-select-sm me-2 w-auto" 
+                                    value={selectedStatus} 
+                                    onChange={handleSortChange}
+                                >
+                                    <option value="">All Statuses</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Processing">Processing</option>
+                                    <option value="Shipped">Shipped</option>
+                                    <option value="Delivered">Delivered</option>
+                                    <option value="Canceled">Canceled</option>
+                                </select>
+                                <span className="badge bg-light text-dark">
+                                    {orders.length} orders
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                </>)}
+
+                    {loading ? (
+                        <div className="card-body text-center py-5">
+                            <Loader text="Loading orders..." />
+                        </div>
+                    ) : orders.length === 0 ? (
+                        <div className="card-body text-center py-5">
+                            <h5 className="text-muted">No orders found</h5>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="card-body p-0">
+                                <div className="table-responsive">
+                                    <table className="table table-hover align-middle mb-0">
+                                        <thead className="table-light">
+                                            <tr>
+                                                <th className="ps-3">Order #</th>
+                                                <th>Customer</th>
+                                                <th>Date</th>
+                                                <th>Total</th>
+                                                <th>Payment</th>
+                                                <th>Status</th>
+                                                <th className="pe-3">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {currentOrders.map(order => (
+                                                <tr key={order._id}>
+                                                    <td className="ps-3 fw-semibold">#{order.orderNumber}</td>
+                                                    <td>{order.shippingAddress?.name || 'N/A'}</td>
+                                                    <td>{formatDate(order.createdAt)}</td>
+                                                    <td>${order.total?.toFixed(2)}</td>
+                                                    <td>
+                                                        <span className="badge bg-light text-dark text-uppercase">
+                                                            {order.paymentMethod}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span className={`badge ${getStatusBadgeClass(order.status)}`}>
+                                                            {order.status}
+                                                        </span>
+                                                    </td>
+                                                    <td className="pe-3">
+                                                        <div className="d-flex gap-2">
+                                                            <Link 
+                                                                to={`/admin/order/viewDetails/${order.orderNumber}`}
+                                                                className="btn btn-sm btn-outline-primary"
+                                                                title="View Details"
+                                                            >
+                                                                <i className="bi bi-eye"></i>
+                                                            </Link>
+                                                            <button 
+                                                                className={`btn btn-sm ${order.status === "Pending" ? 'btn-outline-danger' : 'btn-outline-secondary'}`}
+                                                                onClick={() => cancelOrder(order.orderNumber, order.status)}
+                                                                title="Cancel Order"
+                                                                disabled={order.status !== "Pending"}
+                                                            >
+                                                                <i className="bi bi-x-lg"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div className="card-footer bg-white border-top-0 py-3">
+                                <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                                    <div className="mb-2 mb-md-0">
+                                        <select 
+                                            className="form-select form-select-sm d-inline-block w-auto" 
+                                            value={orderPerPage}
+                                            onChange={(e) => setOrderPerPage(Number(e.target.value))}
+                                        >
+                                            <option value="5">5 per page</option>
+                                            <option value="10">10 per page</option>
+                                            <option value="20">20 per page</option>
+                                            <option value="50">50 per page</option>
+                                        </select>
+                                    </div>
+                                    <Pagination 
+                                        totalPosts={orders.length} 
+                                        postPerPage={orderPerPage} 
+                                        setCurrentPage={setCurrentPage} 
+                                        currentPage={currentPage} 
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
         </AdminLayout>
-    </>)
-}
+    );
+};
+
 export default AllOrders;
