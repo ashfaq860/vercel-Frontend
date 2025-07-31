@@ -7,7 +7,6 @@ const api = axios.create({
         "Content-Type": "application/json"
     }
 });
-
 // Request interceptor: start progress bar
 api.interceptors.request.use(
     (config) => {
