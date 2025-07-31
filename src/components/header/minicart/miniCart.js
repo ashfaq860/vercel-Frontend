@@ -11,108 +11,134 @@ const MiniCart = () => {
     const [shippingCost, setShippingCost] = useState(0);
 
     useEffect(() => {
-        setMiniCart(cart.cart || []);
-        const totalAmount = cart.cart?.reduce((acc, curr) => acc + (curr.price * curr.qty), 0) || 0;
-        const totalShipping = cart.cart?.reduce((acc, curr) => acc + (curr.shippingCost * curr.qty), 0) || 0;
+        setMiniCart(cart.cart);
+        const totalAmount = cart?.cart?.reduce((acc, curr) => Number(acc) + (Number(curr.price) * Number(curr.qty)), 0);
+        const totalShipping = cart?.cart?.reduce((acc, curr) => Number(acc) + (Number(curr.shippingCost) * Number(curr.qty)), 0);
         setTotal(totalAmount);
         setShippingCost(totalShipping);
     }, [cart.cart]);
 
-    const RemoveItem = (id) => dispatch(removeItem(id));
+    const RemoveItem = (id) => {
+        dispatch(removeItem(id));
+    };
 
     return (
-        <div className="minicart-wrapper position-relative">
-            <div className="dropdown">
-                <button
-                    className="btn border-0 dropdown-toggle d-flex align-items-center gap-2"
-                    id="cartDropdown"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                >
-                    <div className="position-relative">
-                        <i className="bi bi-bag-fill fs-4 text-dark"></i>
-                        {miniCart.length > 0 && (
-                            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {miniCart.length}
-                            </span>
-                        )}
-                    </div>
-                    <div className="d-flex flex-column text-start">
-                        <small className="text-muted">My Cart</small>
-                        <strong>Rs. {total}</strong>
-                    </div>
-                </button>
-
-                <ul
-                    className="dropdown-menu dropdown-menu-end shadow p-3 rounded-3"
-                    aria-labelledby="cartDropdown"
-                    style={{ minWidth: '320px', maxWidth: '400px' }}
-                >
-                    {miniCart.length > 0 ? (
-                        <>
-                            <div className="mb-3">
-                                {miniCart.map((item, idx) => (
-                                    <div key={idx} className="d-flex mb-2 border-bottom pb-2">
-                                        <Link to={`/parts/${item.id}`}>
-                                            <img
-                                                src={item.photo}
-                                                alt={item.name}
-                                                height="50"
-                                                width="50"
-                                                className="rounded me-2"
-                                            />
-                                        </Link>
-                                        <div className="flex-grow-1">
-                                            <h6 className="mb-1">{item.name}</h6>
-                                            <div className="d-flex justify-content-between">
-                                                <span className="text-muted">Qty: {item.qty}</span>
-                                                <span>Rs. {item.qty * item.price}</span>
-                                            </div>
-                                        </div>
-                                        <button
-                                            onClick={() => RemoveItem(item.id)}
-                                            className="btn btn-sm btn-link text-danger ms-2"
-                                            title="Remove"
-                                        >
-                                            <i className="bi bi-x-circle"></i>
-                                        </button>
-                                    </div>
-                                ))}
+        <>
+            <div className="shoping-cart min-shopping-cart" style={{ width: '225px' }}>
+                <div className="btn-shoppingCart">
+                    <div className="dropdown">
+                        <div className="btn dropdown-toggle1" id="dropdownMenuButton1 cartButton" data-bs-toggle="dropdown" aria-expanded="false" role="button">
+                            <div className="basket-icon">
+                                <span className="bskt-icon"><i className="bi bi-basket"></i></span>
+                                <span className="bskt-qty">{miniCart.length < 10 ? '0' : ''}{miniCart.length}</span>
                             </div>
-
-                            <div className="border-top pt-2 mb-2">
-                                <div className="d-flex justify-content-between">
-                                    <span>Sub-total:</span>
-                                    <strong>Rs. {total}</strong>
-                                </div>
-                                <div className="d-flex justify-content-between">
-                                    <span>Shipping:</span>
-                                    <strong>Rs. {shippingCost}</strong>
-                                </div>
-                                <div className="d-flex justify-content-between border-top pt-2 mt-2">
-                                    <span>Total:</span>
-                                    <strong>Rs. {Number(total) + Number(shippingCost)}</strong>
-                                </div>
+                            <div className="basket-txt">
+                                <span>My Cart</span>
+                                <span className="cart-Item-Price">RS.{total}</span>
                             </div>
-
-                            <div className="d-flex justify-content-between mt-3">
-                                <Link to="/cart" className="btn btn-outline-dark btn-sm w-50 me-1">
-                                    <i className="bi bi-cart-check"></i> View Cart
-                                </Link>
-                                <Link to="/checkout" className="btn btn-dark btn-sm w-50 ms-1">
-                                    <i className="bi bi-box-arrow-right"></i> Checkout
-                                </Link>
-                            </div>
-                        </>
-                    ) : (
-                        <div className="text-center text-muted py-3">
-                            <i className="bi bi-bag-x fs-2 mb-2"></i>
-                            <p className="mb-0">Your cart is empty</p>
                         </div>
-                    )}
-                </ul>
+
+                        <ul className="dropdown-menu p-2" aria-labelledby="dropdownMenuButton1">
+                            {miniCart?.length > 0 ? (
+                                <>
+                                    <li>
+                                        <table className="table table-hover align-middle mb-2">
+                                            <tbody>
+                                                {miniCart.map((p, i) => (
+                                                    <tr key={p.id}>
+                                                        <td className="text-center">
+                                                            <Link to={`/parts/${p.id}`}>
+                                                                <img src={p.photo} alt={p.name} title={p.name} height="45" width="45" className="img-thumbnail" />
+                                                            </Link>
+                                                        </td>
+                                                        <td>
+                                                            <small className="d-block">{p.name}</small>
+                                                            <small className="text-muted">Qty: {p.qty}</small>
+                                                        </td>
+                                                        <td className="text-end">
+                                                            <div className="d-flex flex-column align-items-end">
+                                                                <span>Rs.{p.price * p.qty}</span>
+                                                                <span
+                                                                    className="text-danger delete-icon"
+                                                                    onClick={() => RemoveItem(p.id)}
+                                                                    title="Remove Item"
+                                                                >
+                                                                    <i className="bi bi-trash-fill fs-6"></i>
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </li>
+                                    <li>
+                                        <table className="table table-sm table-borderless mb-2">
+                                            <tbody>
+                                                <tr>
+                                                    <td><strong>Sub-Total</strong></td>
+                                                    <td className="text-end">Rs.{total}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Flat Shipping</strong></td>
+                                                    <td className="text-end">Rs.{shippingCost}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Total</strong></td>
+                                                    <td className="text-end">Rs.{Number(total) + Number(shippingCost)}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div className="d-flex justify-content-between">
+                                            <Link className="btn btn-sm btn-outline-secondary" to="/cart">
+                                                <i className="bi bi-cart"></i> View Cart
+                                            </Link>
+                                            <Link className="btn btn-sm btn-primary" to="/checkout">
+                                                <i className="bi bi-credit-card"></i> Checkout
+                                            </Link>
+                                        </div>
+                                    </li>
+                                </>
+                            ) : (
+                                <li className="text-center text-muted py-2">Your cart is empty.</li>
+                            )}
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </div>
+
+            <style jsx="true">{`
+                .delete-icon {
+                    cursor: pointer;
+                    transition: color 0.2s ease;
+                }
+                .delete-icon:hover {
+                    color: #dc3545;
+                }
+                .basket-txt {
+                    display: flex;
+                    flex-direction: column;
+                    margin-left: 5px;
+                }
+                .basket-icon {
+                    position: relative;
+                }
+                .bskt-qty {
+                    position: absolute;
+                    top: -5px;
+                    right: -10px;
+                    background: red;
+                    color: white;
+                    font-size: 12px;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            `}</style>
+        </>
     );
 };
 
