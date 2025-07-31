@@ -34,7 +34,7 @@ const Single = () => {
     }
 
     useEffect(() => {
-        getReviews();
+       // getReviews();
     }, [id]);
     useEffect(() => {
         let total = reviews?.reduce((acc, curr) => acc + Number(curr.star), 0);
@@ -110,7 +110,7 @@ const Single = () => {
      <>
   <Layout>
         <h1>{product?.category?._id} </h1>
-        <RelatedProducts cId={product?.category?._id}
+        
         </Layout>
      
         </>
