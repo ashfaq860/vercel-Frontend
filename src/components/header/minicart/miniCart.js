@@ -30,22 +30,23 @@ const MiniCart = () => {
 
   return (
     <>
-      <div className="position-relative mini-cart-container">
+      <div className="mini-cart position-relative">
         <div
-          className="btn btn-outline-primary d-flex align-items-center gap-2"
+          className="cart-icon d-flex align-items-center"
           data-bs-toggle="dropdown"
           aria-expanded="false"
-          style={{ minWidth: '160px' }}
+          role="button"
         >
-          <i className="bi bi-bag fs-5"></i>
-          <span className="fw-semibold">Cart</span>
-          <span className="badge bg-danger rounded-pill">{miniCart.length}</span>
+          <i className="bi bi-bag fs-4 text-dark"></i>
+          {miniCart.length > 0 && (
+            <span className="cart-badge">{miniCart.length}</span>
+          )}
         </div>
 
         <div className="dropdown-menu p-3 shadow-sm border-0 mt-2 cart-dropdown">
           {miniCart.length > 0 ? (
             <>
-              <div className="cart-items max-vh-50 overflow-auto">
+              <div className="cart-items overflow-auto">
                 {miniCart.map((item) => (
                   <div
                     key={item.id}
@@ -68,13 +69,13 @@ const MiniCart = () => {
                     </div>
                     <div className="text-end">
                       <div className="fw-bold">Rs.{item.price * item.qty}</div>
-                      <button
-                        className="btn btn-sm btn-link text-danger p-0 delete-btn"
+                      <span
+                        className="text-danger delete-btn"
                         onClick={() => RemoveItem(item.id)}
                         title="Remove Item"
                       >
                         <i className="bi bi-trash-fill fs-6"></i>
-                      </button>
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -111,27 +112,55 @@ const MiniCart = () => {
       </div>
 
       <style jsx="true">{`
-        .mini-cart-container .dropdown-menu {
-          width: 300px;
+        .mini-cart {
+          cursor: pointer;
+        }
+
+        .cart-icon {
+          position: relative;
+          padding: 6px 10px;
+          border-radius: 6px;
+          transition: background-color 0.2s ease;
+        }
+
+        .cart-icon:hover {
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .cart-badge {
+          position: absolute;
+          top: 0;
+          right: 0;
+          transform: translate(50%, -50%);
+          background-color: #dc3545;
+          color: white;
+          font-size: 12px;
+          padding: 2px 6px;
+          border-radius: 50%;
+        }
+
+        .dropdown-menu.cart-dropdown {
+          width: 320px;
           right: 0;
           left: auto;
           border-radius: 0.5rem;
-          animation: fadeIn 0.2s ease-in-out;
           z-index: 999;
+          animation: fadeIn 0.2s ease-in-out;
+        }
+
+        .cart-items {
+          max-height: 250px;
         }
 
         .delete-btn {
+          cursor: pointer;
           opacity: 0.7;
-          transition: all 0.2s ease;
+          transition: color 0.2s ease;
         }
 
         .delete-btn:hover {
           opacity: 1;
           color: #dc3545;
-        }
-
-        .cart-items {
-          max-height: 250px;
         }
 
         @keyframes fadeIn {
