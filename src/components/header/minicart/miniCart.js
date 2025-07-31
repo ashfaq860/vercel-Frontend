@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { removeItem } from '../../../store/cartSlice';
@@ -9,6 +9,7 @@ const MiniCart = () => {
   const [miniCart, setMiniCart] = useState([]);
   const [total, setTotal] = useState(0);
   const [shippingCost, setShippingCost] = useState(0);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     setMiniCart(cart.cart);
@@ -24,26 +25,36 @@ const MiniCart = () => {
     setShippingCost(totalShipping);
   }, [cart.cart]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        dropdownRef.current.classList.remove('show');
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const toggleDropdown = () => {
+    dropdownRef.current.classList.toggle('show');
+  };
+
   const RemoveItem = (id) => {
     dispatch(removeItem(id));
   };
 
   return (
     <>
-      <div className="mini-cart position-relative">
-        <div
-          className="cart-icon d-flex align-items-center"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-          role="button"
-        >
-          <i className="bi bi-bag fs-4 text-dark"></i>
+      <div className="position-relative" ref={dropdownRef}>
+        <div className="basket-icon" onClick={toggleDropdown}>
+          <i className="bi bi-basket2-fill fs-4 text-dark"></i>
           {miniCart.length > 0 && (
             <span className="cart-badge">{miniCart.length}</span>
           )}
         </div>
 
-        <div className="dropdown-menu p-3 shadow-sm border-0 mt-2 cart-dropdown">
+        <div className="cart-dropdown shadow-sm p-3">
           {miniCart.length > 0 ? (
             <>
               <div className="cart-items overflow-auto">
@@ -61,7 +72,10 @@ const MiniCart = () => {
                         className="rounded border"
                       />
                       <div>
-                        <Link to={`/parts/${item.id}`} className="text-decoration-none text-dark">
+                        <Link
+                          to={`/parts/${item.id}`}
+                          className="text-decoration-none text-dark"
+                        >
                           <strong>{item.name}</strong>
                         </Link>
                         <div className="text-muted small">Qty: {item.qty}</div>
@@ -97,10 +111,10 @@ const MiniCart = () => {
               </div>
 
               <div className="mt-3 d-flex justify-content-between gap-2">
-                <Link to="/cart" className="btn btn-outline-secondary btn-sm w-50">
+                <Link to="/cart" className="btn btn-outline-dark btn-sm w-50">
                   View Cart
                 </Link>
-                <Link to="/checkout" className="btn btn-primary btn-sm w-50">
+                <Link to="/checkout" className="btn btn-dark btn-sm w-50">
                   Checkout
                 </Link>
               </div>
@@ -112,55 +126,59 @@ const MiniCart = () => {
       </div>
 
       <style jsx="true">{`
-        .mini-cart {
-          cursor: pointer;
-        }
-
-        .cart-icon {
+        .basket-icon {
           position: relative;
-          padding: 6px 10px;
-          border-radius: 6px;
-          transition: background-color 0.2s ease;
+          cursor: pointer;
+          transition: transform 0.2s;
         }
 
-        .cart-icon:hover {
-          background-color: rgba(0, 0, 0, 0.05);
+        .basket-icon:hover {
+          transform: scale(1.1);
         }
 
         .cart-badge {
           position: absolute;
-          top: 0;
-          right: 0;
-          transform: translate(50%, -50%);
-          background-color: #dc3545;
-          color: white;
-          font-size: 12px;
+          top: -6px;
+          right: -8px;
+          background: #dc3545;
+          color: #fff;
+          font-size: 11px;
           padding: 2px 6px;
           border-radius: 50%;
+          font-weight: bold;
         }
 
-        .dropdown-menu.cart-dropdown {
-          width: 320px;
+        .cart-dropdown {
+          position: absolute;
+          top: 120%;
           right: 0;
-          left: auto;
-          border-radius: 0.5rem;
+          width: 320px;
+          background: #fff;
+          border-radius: 0.75rem;
+          display: none;
           z-index: 999;
+          border: 1px solid #eee;
+          max-height: 400px;
           animation: fadeIn 0.2s ease-in-out;
         }
 
+        .cart-dropdown.show {
+          display: block;
+        }
+
         .cart-items {
-          max-height: 250px;
+          max-height: 230px;
+          overflow-y: auto;
         }
 
         .delete-btn {
           cursor: pointer;
           opacity: 0.7;
-          transition: color 0.2s ease;
         }
 
         .delete-btn:hover {
-          opacity: 1;
           color: #dc3545;
+          opacity: 1;
         }
 
         @keyframes fadeIn {
