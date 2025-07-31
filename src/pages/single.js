@@ -57,7 +57,7 @@ const Single = () => {
         }
     }
 
-    /**Get product photoes Functions
+    /**Get product photoes Functions */
     const productPhotoes    =  async()=>{
       const {data} =    await getPhotosByProductId(id);
       
@@ -68,7 +68,7 @@ const Single = () => {
             setPhoto4(data?.images?.photoPath4);
       }
   }
-*/
+
   /*set Active Photo */
    useEffect(() => {
         getSingleProduct();
