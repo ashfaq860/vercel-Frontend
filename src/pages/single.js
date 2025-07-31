@@ -265,7 +265,7 @@ const Single = () => {
                     </div>
 
                     { /* Related Products Block */}
-                    { <RelatedProducts  cId={product?.cId}/> }
+                    { <RelatedProducts  cId={product?.category?._Id}/> }
                 </div>
                 {<SinglePageFoot />}
             </Layout>
