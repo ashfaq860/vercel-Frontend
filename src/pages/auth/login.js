@@ -31,12 +31,9 @@ const Login = () => {
             localStorage.removeItem("rememberPassword");
         }
         setLoading(true);
-        const data = {
-            user: values.user,
-            password: values.password,
-        };
-
+        const data = { user: values.user, password: values.password };
         const response = await login(data);
+
         if (response.status === 201) {
             setLoading(false);
             const user = {
@@ -68,7 +65,6 @@ const Login = () => {
             setFieldValue("password", savedPassword);
             setFieldValue("isRememberMe", true);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const { values, touched, handleBlur, handleChange, errors, setFieldValue } = useFormik({
@@ -80,24 +76,12 @@ const Login = () => {
         validationSchema: loginSchema,
     });
 
-    const Password = (e) => {
-        if (e.length > 0) {
-            setShow(true);
-        } else {
-            setShow(false);
-        }
+    const showPass = () => {
+        setEye(!eye);
+        const input = document.getElementById("password");
+        input.type = input.type === "password" ? "text" : "password";
     };
 
-    const showPass = () => {
-        if (eye === false) {
-            setEye(true);
-            document.getElementById("password").setAttribute("type", "text");
-        } else {
-            setEye(false);
-            document.getElementById("password").setAttribute("type", "password");
-        }
-    };
-    
     const handleGoogleSuccess = async (credentialResponse) => {
         try {
             const decoded = jwtDecode(credentialResponse.credential);
@@ -136,8 +120,8 @@ const Login = () => {
             <div className="d-flex align-items-center min-vh-100 bg-light">
                 <div className="container py-5">
                     <div className="row justify-content-center">
-                        <div className="col-md-8 col-lg-6 col-xl-5">
-                            <div className="card shadow-sm border-0 rounded-4 overflow-hidden">
+                        <div className="col-md-7 col-lg-6 col-xl-5">
+                            <div className="card shadow border-0 rounded-4">
                                 <div className="card-body p-4 p-sm-5">
                                     <div className="text-center mb-4">
                                         <h2 className="fw-bold text-primary">Welcome Back</h2>
@@ -145,55 +129,59 @@ const Login = () => {
                                     </div>
 
                                     <form onSubmit={handleLogin}>
-                                        <div className="mb-3">
+                                        {/* Email or Phone Input */}
+                                        <div className="mb-3 position-relative">
                                             <div className="input-group">
                                                 <span className="input-group-text bg-white border-end-0">
-                                                    {values.user.includes('@') ? <FaEnvelope className="text-muted" /> : <FaPhone className="text-muted" />}
+                                                    {values.user.includes('@') ? <FaEnvelope /> : <FaPhone />}
                                                 </span>
                                                 <input
                                                     type="text"
                                                     name="user"
                                                     onChange={handleChange}
-                                                    value={values.user}
                                                     onBlur={handleBlur}
+                                                    value={values.user}
                                                     className="form-control border-start-0"
                                                     placeholder="Email or Phone Number"
                                                 />
                                             </div>
-                                            {errors.email && touched.email && (
-                                                <div className="text-danger small mt-1">{errors.email}</div>
+                                            {errors.user && touched.user && (
+                                                <div className="text-danger small mt-1">{errors.user}</div>
                                             )}
                                         </div>
 
-                                        <div className="mb-3">
+                                        {/* Password Input */}
+                                        <div className="mb-3 position-relative">
                                             <div className="input-group">
                                                 <span className="input-group-text bg-white border-end-0">
-                                                    <FaLock className="text-muted" />
+                                                    <FaLock />
                                                 </span>
                                                 <input
                                                     type="password"
-                                                    name="password"
                                                     id="password"
+                                                    name="password"
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
                                                     value={values.password}
                                                     className="form-control border-start-0 pe-5"
                                                     placeholder="Password"
                                                 />
-                                                {show && (
-                                                    <button
-                                                        type="button"
-                                                        onClick={showPass}
-                                                        className="position-absolute end-0 top-0 h-100 bg-transparent border-0 px-3"
-                                                        style={{ zIndex: 5 }}
-                                                    >
-                                                        {eye ? <FaEyeSlash className="text-muted" /> : <FaEye className="text-muted" />}
-                                                    </button>
-                                                )}
+                                                <button
+                                                    type="button"
+                                                    onClick={showPass}
+                                                    className="btn position-absolute end-0 top-0 bottom-0 d-flex align-items-center px-3 border-0 bg-transparent"
+                                                    style={{ zIndex: 5 }}
+                                                >
+                                                    {eye ? <FaEyeSlash /> : <FaEye />}
+                                                </button>
                                             </div>
+                                            {errors.password && touched.password && (
+                                                <div className="text-danger small mt-1">{errors.password}</div>
+                                            )}
                                         </div>
 
-                                        <div className="d-flex justify-content-between align-items-center mb-4">
+                                        {/* Remember Me & Forgot Password */}
+                                        <div className="d-flex justify-content-between align-items-center mb-3">
                                             <div className="form-check">
                                                 <input
                                                     className="form-check-input"
@@ -207,27 +195,33 @@ const Login = () => {
                                                     Remember me
                                                 </label>
                                             </div>
-                                            <Link to="/forgotpassword" className="small text-decoration-none">Forgot password?</Link>
+                                            <Link to="/forgotpassword" className="small text-decoration-none">
+                                                Forgot password?
+                                            </Link>
                                         </div>
 
+                                        {/* Submit Button */}
                                         <button
                                             type="submit"
                                             disabled={loading}
-                                            className="btn btn-primary w-100 py-2 mb-3"
+                                            className="btn btn-primary w-100 py-2 mb-3 shadow-sm"
                                         >
                                             <LoadingButton loading={loading} title="Sign In" />
                                         </button>
 
+                                        {/* Error Alert */}
                                         {error && (
                                             <div className="alert alert-danger small mb-3">{error}</div>
                                         )}
 
+                                        {/* Divider */}
                                         <div className="d-flex align-items-center my-4">
                                             <hr className="flex-grow-1" />
                                             <span className="px-3 text-muted small">OR</span>
                                             <hr className="flex-grow-1" />
                                         </div>
 
+                                        {/* Google Login */}
                                         <div className="d-flex justify-content-center mb-3">
                                             <GoogleLogin
                                                 onSuccess={handleGoogleSuccess}
@@ -235,9 +229,13 @@ const Login = () => {
                                             />
                                         </div>
 
+                                        {/* Signup Redirect */}
                                         <div className="text-center mt-4">
-                                            <p className="small text-muted">Don't have an account?{' '}
-                                                <Link to="/register" className="text-decoration-none">Sign up</Link>
+                                            <p className="small text-muted mb-0">
+                                                Don't have an account?{" "}
+                                                <Link to="/register" className="text-decoration-none fw-semibold">
+                                                    Sign up
+                                                </Link>
                                             </p>
                                         </div>
                                     </form>
