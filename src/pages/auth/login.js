@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../../api/internal';
+import { login } from '../../api/internal';
 import { setUser } from '../../store/userSlice';
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
@@ -32,7 +32,7 @@ const Login = () => {
     const data  =  {
       emailPhone,password
     }
-      const response = await loginUser(data);
+      const response = await login(data);
 
       if (response.status === 200) {
         const user = {
