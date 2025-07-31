@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Playfair+Display:wght@600&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
+
+.slider-img {
+  object-fit: cover;
+  height: 450px;
+  filter: brightness(80%);
+  transition: transform 0.5s ease-in-out;
+}
+
+.slider-img:hover {
+  transform: scale(1.02);
+}
+
+.carousel-caption {
+  bottom: 20%;
+}
+
+.slider-title {
+  font-family: 'Lobster', cursive;
+  font-size: 2.5rem;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+
+.slider-title a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.slider-title a:hover {
+  text-decoration: underline;
+}
+
+.slider-desc {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  color: #e0e0e0;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.slider-overlay {
+  position: relative;
+}
+
+.slider-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0));
+  z-index: 2;
+}
+
+.carousel-item {
+  position: relative;
+}
+
+.carousel-caption {
+  position: absolute;
+  z-index: 3;
+}
+
+@media (max-width: 768px) {
+  .slider-title {
+    font-size: 1.8rem;
+  }
+
+  .slider-desc {
+    font-size: 1rem;
+  }
+}
