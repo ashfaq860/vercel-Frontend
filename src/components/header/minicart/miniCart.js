@@ -5,113 +5,116 @@ import { removeItem } from '../../../store/cartSlice';
 import './miniCart.css';
 
 const MiniCart = () => {
-    const cart = useSelector((state) => state.cart);
-    const dispatch = useDispatch();
-    const [miniCart, setMiniCart] = useState([]);
-    const [removingItems, setRemovingItems] = useState([]);
-    const [total, setTotal] = useState(0);
-    const [shippingCost, setShippingCost] = useState(0);
+  const cart = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+  const [miniCart, setMiniCart] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [shippingCost, setShippingCost] = useState(0);
+  const [animateAdd, setAnimateAdd] = useState(false);
+  const [fadeOutId, setFadeOutId] = useState(null);
 
-    useEffect(() => {
-        setMiniCart(cart.cart);
+  useEffect(() => {
+    setMiniCart(cart.cart);
+    const totalAmount = cart.cart.reduce((acc, curr) => acc + curr.price * curr.qty, 0);
+    const totalShipping = cart.cart.reduce((acc, curr) => acc + curr.shippingCost * curr.qty, 0);
+    setTotal(totalAmount);
+    setShippingCost(totalShipping);
 
-        let totalAmount = cart?.cart?.reduce((acc, curr) => Number(acc) + (Number(curr.price) * Number(curr.qty)), 0);
-        let totalShippingCost = cart?.cart?.reduce((acc, curr) => Number(acc) + (Number(curr.shippingCost) * Number(curr.qty)), 0);
+    // Trigger pop animation when cart updates
+    if (cart.cart.length > 0) {
+      setAnimateAdd(true);
+      const timer = setTimeout(() => setAnimateAdd(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [cart]);
 
-        setShippingCost(totalShippingCost);
-        setTotal(totalAmount);
-    }, [cart.cart]);
+  const handleRemove = (id) => {
+    setFadeOutId(id);
+    setTimeout(() => {
+      dispatch(removeItem(id));
+      setFadeOutId(null);
+    }, 300); // Match fade-out animation
+  };
 
-    const RemoveItem = (id) => {
-        setRemovingItems((prev) => [...prev, id]);
-
-        setTimeout(() => {
-            dispatch(removeItem(id));
-            setRemovingItems((prev) => prev.filter((itemId) => itemId !== id));
-        }, 300); // matches fade-out duration
-    };
-
-    return (
-        <div className="shoping-cart min-shopping-cart" style={{ width: '240px' }}>
-            <div className="btn-shoppingCart">
-                <div className="dropdown">
-                    <div className="btn dropdown-toggle1 d-flex align-items-center justify-content-end" id="dropdownMenuButton1 cartButton" data-bs-toggle="dropdown" aria-expanded="false" role="button">
-                        <div className="basket-icon position-relative me-2">
-                            <span className="bskt-icon"><i className="bi bi-basket3 fs-4"></i></span>
-                            <span className="bskt-qty badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">{miniCart.length}</span>
-                        </div>
-                        <div className="basket-txt text-end">
-                            <span className="d-block">My Cart</span>
-                            <span className="cart-Item-Price fw-bold text-primary">Rs.{total}</span>
-                        </div>
-                    </div>
-
-                    <ul className="dropdown-menu p-2" aria-labelledby="dropdownMenuButton1">
-                        {miniCart?.length > 0 ? (
-                            <>
-                                <li>
-                                    <table className="table table-sm table-hover">
-                                        <tbody>
-                                            {miniCart.map((p, i) => (
-                                                <tr
-                                                    key={p._id || i}
-                                                    className={`fade-in-cart-item ${removingItems.includes(p.id) ? 'fade-out-cart-item' : ''}`}
-                                                >
-                                                    <td className="text-center">
-                                                        <Link to={`/parts/${p.id}`}>
-                                                            <img src={p.photo} alt={p.name} title={p.name} className="img-fluid rounded" height="45" width="45" />
-                                                        </Link>
-                                                    </td>
-                                                    <td className="text-start" colSpan="2">
-                                                        <small>{p.name}</small><br />
-                                                        <span className="text-muted small">x{p.qty}</span>
-                                                    </td>
-                                                    <td className="text-end">
-                                                        Rs.{p.price * p.qty}
-                                                    </td>
-                                                    <td>
-                                                        <button className="btn btn-sm text-danger" onClick={() => RemoveItem(p.id)}>&times;</button>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </li>
-                                <li>
-                                    <table className="table table-bordered mb-2">
-                                        <tbody>
-                                            <tr>
-                                                <td><strong>Sub-Total</strong></td>
-                                                <td className="text-end">Rs.{total}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Shipping</strong></td>
-                                                <td className="text-end">Rs.{shippingCost}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Total</strong></td>
-                                                <td className="text-end fw-bold">Rs.{Number(total) + Number(shippingCost)}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <div className="d-flex justify-content-between">
-                                        <Link className="btn btn-outline-primary btn-sm" to="/cart">
-                                            <i className="bi bi-cart-check-fill me-1"></i> View Cart
-                                        </Link>
-                                        <Link className="btn btn-primary btn-sm" to="/checkout">
-                                            <i className="bi bi-credit-card-fill me-1"></i> Checkout
-                                        </Link>
-                                    </div>
-                                </li>
-                            </>
-                        ) : (
-                            <li className="text-center text-muted">Your cart is empty</li>
-                        )}
-                    </ul>
-                </div>
-            </div>
+  return (
+    <div className="dropdown">
+      <div
+        className={`d-flex align-items-center justify-content-end cart-button-wrapper ${animateAdd ? 'pop' : ''}`}
+        id="dropdownMenuButton1"
+        role="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        <div className="basket-icon d-flex align-items-center me-3 position-relative">
+          <i className="bi bi-basket fs-4"></i>
+          <span className="bskt-qty badge bg-danger position-absolute top-0 start-100 translate-middle">
+            {miniCart.length < 10 ? '0' : ''}
+            {miniCart.length}
+          </span>
         </div>
-    );
+        <div className="basket-txt d-flex flex-column text-end">
+          <span className="text-muted small">My Cart</span>
+          <span className="fw-bold">Rs. {total}</span>
+        </div>
+      </div>
+
+      <ul className="dropdown-menu minicart-dropdown p-3 shadow" aria-labelledby="dropdownMenuButton1">
+        {miniCart.length === 0 ? (
+          <p className="text-center">Your cart is empty</p>
+        ) : (
+          <div className="table-responsive">
+            <table className="table table-borderless table-sm mb-2">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Qty</th>
+                  <th>Price</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {miniCart.map((p) => (
+                  <tr
+                    key={p._id}
+                    className={`fade-in-item ${fadeOutId === p._id ? 'fade-out' : ''}`}
+                  >
+                    <td>{p.name}</td>
+                    <td>{p.qty}</td>
+                    <td>Rs. {p.price}</td>
+                    <td>
+                      <span
+                        className="text-danger pointer"
+                        onClick={() => handleRemove(p._id)}
+                        title="Remove"
+                      >
+                        <i className="bi bi-x-circle-fill fs-5"></i>
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="cart-totals d-flex justify-content-between mb-2">
+              <strong>Shipping:</strong>
+              <span>Rs. {shippingCost}</span>
+            </div>
+            <div className="cart-totals d-flex justify-content-between mb-3">
+              <strong>Total:</strong>
+              <span>Rs. {total + shippingCost}</span>
+            </div>
+            <div className="d-flex justify-content-between">
+              <Link to="/cart" className="btn btn-outline-primary btn-sm d-flex align-items-center">
+                <i className="bi bi-eye me-1"></i> View Cart
+              </Link>
+              <Link to="/checkout" className="btn btn-primary btn-sm d-flex align-items-center">
+                <i className="bi bi-box-arrow-right me-1"></i> Checkout
+              </Link>
+            </div>
+          </div>
+        )}
+      </ul>
+    </div>
+  );
 };
 
 export default MiniCart;
