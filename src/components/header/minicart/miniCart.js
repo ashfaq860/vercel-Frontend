@@ -2,102 +2,94 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { removeItem } from '../../../store/cartSlice';
-import './MiniCart.css';
 
 const MiniCart = () => {
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
-  const [miniCart, setMiniCart] = useState([]);
   const [total, setTotal] = useState(0);
-  const [shippingCost, setShippingCost] = useState(0);
+  const [shipping, setShipping] = useState(0);
 
   useEffect(() => {
-    setMiniCart(cart.cart || []);
-    const totalAmount = cart?.cart?.reduce((acc, curr) => acc + curr.price * curr.qty, 0);
-    const totalShippingCost = cart?.cart?.reduce((acc, curr) => acc + curr.shippingCost * curr.qty, 0);
+    let totalAmount = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+    let shippingCost = cart.reduce((acc, item) => acc + (item.shippingCost || 0) * item.qty, 0);
     setTotal(totalAmount);
-    setShippingCost(totalShippingCost);
-  }, [cart.cart]);
+    setShipping(shippingCost);
+  }, [cart]);
 
-  const RemoveItem = (id) => {
+  const handleRemove = (id) => {
     dispatch(removeItem(id));
   };
 
   return (
-    <div className="minicart-container">
-      <div className="dropdown">
-        <div
-          className="cart-button d-flex align-items-center justify-content-end"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          <div className="cart-icon d-flex align-items-center">
-            <i className="bi bi-basket basket-icon"></i>
-            <span className="cart-badge">{miniCart.length}</span>
+    <div className="mini-cart-wrapper">
+      <div className="mini-cart-button d-flex justify-content-end align-items-center">
+        <div className="cart-icon d-flex align-items-center" data-bs-toggle="dropdown" role="button">
+          <div className="icon position-relative me-2">
+            <i className="bi bi-cart4 fs-4 text-dark"></i>
+            {cart.length > 0 && (
+              <span className="cart-badge">{cart.length}</span>
+            )}
           </div>
-          <div className="cart-summary ms-2 text-end">
-            <div className="summary-title">My Cart</div>
-            <div className="summary-price">Rs. {total}</div>
+          <div className="cart-summary text-end">
+            <div className="small text-muted">My Cart</div>
+            <div className="fw-bold">Rs. {total}</div>
           </div>
         </div>
 
-        <ul className="dropdown-menu dropdown-menu-end minicart-dropdown">
-          {miniCart.length > 0 ? (
+        <ul className="dropdown-menu dropdown-menu-end cart-dropdown p-3">
+          {cart.length === 0 ? (
+            <li className="text-center text-muted">Cart is empty</li>
+          ) : (
             <>
               <li>
-                <table className="table table-striped minicart-table">
-                  <tbody>
-                    {miniCart.map((p, i) => (
-                      <tr key={i} className="fade-in">
-                        <td className="text-center">
-                          <Link to={`/parts/${p.id}`}>
-                            <img src={p.photo} alt={p.name} width="45" height="45" />
-                          </Link>
-                        </td>
-                        <td className="text-start">
-                          <small>{p.name}</small>
-                        </td>
-                        <td className="text-center">x{p.qty}</td>
-                        <td className="text-end">Rs.{p.price * p.qty}</td>
-                        <td className="text-end">
-                          <button className="btn btn-sm text-danger" onClick={() => RemoveItem(p.id)}>
-                            &times;
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                {cart.map((item, index) => (
+                  <div key={item.id || index} className="cart-item d-flex align-items-center justify-content-between fade-in">
+                    <Link to={`/parts/${item.id}`} className="d-flex align-items-center text-decoration-none text-dark flex-grow-1">
+                      <img
+                        src={item.photo}
+                        alt={item.name}
+                        className="cart-item-img me-2"
+                      />
+                      <div className="cart-item-details">
+                        <div className="cart-item-name">{item.name}</div>
+                        <div className="text-muted small">x{item.qty} - Rs. {item.price * item.qty}</div>
+                      </div>
+                    </Link>
+                    <button className="btn btn-sm text-danger ms-2" onClick={() => handleRemove(item.id)}>
+                      <i className="bi bi-trash3-fill"></i>
+                    </button>
+                  </div>
+                ))}
               </li>
-              <li>
-                <table className="table table-bordered mb-0">
+
+              <li className="mt-3">
+                <table className="table table-sm mb-2">
                   <tbody>
                     <tr>
-                      <td>Sub-Total</td>
-                      <td className="text-end">Rs.{total}</td>
+                      <td className="text-start">Sub-Total</td>
+                      <td className="text-end">Rs. {total}</td>
                     </tr>
                     <tr>
-                      <td>Shipping</td>
-                      <td className="text-end">Rs.{shippingCost}</td>
+                      <td className="text-start">Shipping</td>
+                      <td className="text-end">Rs. {shipping}</td>
                     </tr>
                     <tr>
-                      <td><strong>Total</strong></td>
-                      <td className="text-end"><strong>Rs.{total + shippingCost}</strong></td>
+                      <td className="fw-bold text-start">Total</td>
+                      <td className="fw-bold text-end">Rs. {total + shipping}</td>
                     </tr>
                   </tbody>
                 </table>
-              </li>
-              <li className="text-end p-2">
-                <Link className="btn btn-outline-primary btn-sm me-2" to="/cart">
-                  <i className="bi bi-cart"></i> View Cart
-                </Link>
-                <Link className="btn btn-primary btn-sm" to="/checkout">
-                  <i className="bi bi-box-arrow-right"></i> Checkout
-                </Link>
+
+                <div className="d-flex justify-content-between gap-2">
+                  <Link to="/cart" className="btn btn-outline-dark w-50">
+                    <i className="bi bi-eye me-1"></i> View Cart
+                  </Link>
+                  <Link to="/checkout" className="btn btn-dark w-50">
+                    <i className="bi bi-box-arrow-right me-1"></i> Checkout
+                  </Link>
+                </div>
               </li>
             </>
-          ) : (
-            <li className="p-3 text-center">Your cart is empty.</li>
           )}
         </ul>
       </div>
