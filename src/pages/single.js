@@ -108,7 +108,10 @@ const Single = () => {
 
     return (
      <>
-        <h1>Single Product page</h1>
+  <Layout>
+        <h1>{product?.category?._id} </h1>
+        <RelatedProducts cId={product?.category?._id}
+        </Layout>
      
         </>
     );
