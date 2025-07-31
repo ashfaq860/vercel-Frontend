@@ -1,4 +1,4 @@
-/*
+
 div.forms input {
     margin-top: 13px;
     box-shadow: 0 0 2px #bbb, 0 0 3px #bbb;
@@ -36,7 +36,7 @@ f.showPass i:hover {
            cursor:pointer;
            color:blue;
         }
-*/
+
 /**OTP input field css*/
 .otp_input{
     text-align:center;
