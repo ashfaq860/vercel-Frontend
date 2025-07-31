@@ -1,4 +1,27 @@
 /* Completely override and style MiniCart cleanly */
+.cart-badge {
+  position: absolute;
+  top: -10px;   /* moved higher */
+  right: -12px;
+  background-color: #dc3545;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 2px 6px;
+  line-height: 1;
+  z-index: 1;
+}
+.cart-item-img {
+  width: 40px;       /* reduced */
+  height: 40px;
+  object-fit: cover;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+.cart-item {
+  padding: 6px 0;
+}
 
 .mini-cart-wrapper {
   position: relative;
