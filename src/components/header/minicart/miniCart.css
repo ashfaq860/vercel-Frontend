@@ -1,56 +1,67 @@
-.cart-button-wrapper {
+.minicart-container {
+  position: relative;
+  z-index: 1000;
+}
+
+.cart-button {
   cursor: pointer;
-  padding: 0.5rem 1rem;
-  border-radius: 10px;
-  transition: background-color 0.3s ease-in-out;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
 }
 
-.cart-button-wrapper:hover {
-  background-color: #f1f1f1;
+.cart-button:hover {
+  background: #f8f9fa;
 }
 
-.basket-icon i {
-  font-size: 1.4rem;
+.cart-icon {
+  position: relative;
+  font-size: 22px;
+  color: #333;
 }
 
-.bskt-qty {
-  font-size: 0.7rem;
-  padding: 0.3em 0.5em;
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background-color: #dc3545;
+  color: white;
+  font-size: 12px;
   border-radius: 50%;
-  line-height: 1;
+  padding: 2px 6px;
+}
+
+.cart-summary {
+  line-height: 1.1;
+}
+
+.summary-title {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.summary-price {
+  font-size: 13px;
+  color: #555;
 }
 
 .minicart-dropdown {
   width: 350px;
-  right: 0;
-  left: auto;
   animation: fadeIn 0.3s ease-in-out;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.fade-in-item {
-  animation: fadeInRow 0.4s ease-in-out;
+.minicart-table td {
+  vertical-align: middle;
+  font-size: 13px;
 }
 
-.fade-out {
-  opacity: 0 !important;
-  transition: opacity 0.3s ease-in-out;
+.fade-in {
+  animation: fadeIn 0.4s ease-in-out;
 }
 
-.pop {
-  animation: popCart 0.3s ease-in-out;
-}
-
-@keyframes popCart {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
-
-@keyframes fadeInRow {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.pointer {
-  cursor: pointer;
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
 }
