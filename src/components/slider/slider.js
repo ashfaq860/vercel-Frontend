@@ -3,93 +3,74 @@ import { Link } from "react-router-dom";
 import { getSliderImages } from "../../api/internal";
 import "./Slider.css";
 
-// Stable ID for Bootstrap to recognize
-const carouselId = "homepageSlider";
-
 const Slider = () => {
-    const [slides, setSlides] = useState([]);
+  const [slides, setSlides] = useState([]);
 
-    useEffect(() => {
-        const fetchSlides = async () => {
-            const res = await getSliderImages();
-            setSlides(res.data);
-        };
-        fetchSlides();
-    }, []);
-
-    const getImageSrc = (slide) => {
-        if (slide.preview) return slide.preview;
-        if (slide.url?.startsWith("http")) return slide.url;
-        return `${process.env.REACT_APP_INTERNAL_API_PATH}${slide.url}`;
+  useEffect(() => {
+    const getSlider = async () => {
+      const res = await getSliderImages();
+      setSlides(res.data);
     };
+    getSlider();
+  }, []);
 
-    return (
-        <div
-            id={carouselId}
-            className="carousel slide carousel-fade"
-            data-bs-ride="carousel"
+  const getImageSrc = (slide) => {
+    if (slide.preview) return slide.preview;
+    if (slide.url?.startsWith("http")) return slide.url;
+    return `${process.env.REACT_APP_INTERNAL_API_PATH}${slide.url}`;
+  };
+
+  return (
+    <div id="mainSlider" className="carousel slide carousel-fade" data-bs-ride="carousel">
+      <div className="carousel-indicators">
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            type="button"
+            data-bs-target="#mainSlider"
+            data-bs-slide-to={index}
+            className={index === 0 ? "active" : ""}
+            aria-current={index === 0 ? "true" : undefined}
+            aria-label={`Slide ${index + 1}`}
+          ></button>
+        ))}
+      </div>
+
+      <div className="carousel-inner">
+        {slides.map((slide, index) => (
+          <div
+            key={slide._id || index}
+            className={`carousel-item ${index === 0 ? "active" : ""}`}
             data-bs-interval="5000"
-        >
-            {/* Dots */}
-            <div className="carousel-indicators">
-                {slides.map((_, index) => (
-                    <button
-                        key={index}
-                        type="button"
-                        data-bs-target={`#${carouselId}`}
-                        data-bs-slide-to={index}
-                        className={index === 0 ? "active" : ""}
-                        aria-current={index === 0 ? "true" : undefined}
-                        aria-label={`Slide ${index + 1}`}
-                    />
-                ))}
+          >
+            <div className="slider-overlay">
+              <img
+                src={getImageSrc(slide)}
+                className="d-block w-100 slider-img"
+                alt={slide.title || "Slide"}
+                height="450"
+              />
             </div>
-
-            {/* Slides */}
-            <div className="carousel-inner">
-                {slides.map((slide, index) => (
-                    <div
-                        key={slide._id || index}
-                        className={`carousel-item ${index === 0 ? "active" : ""}`}
-                    >
-                        <div className="slider-overlay">
-                            <img
-                                src={getImageSrc(slide)}
-                                className="d-block w-100 slider-img"
-                                alt={slide.title || "Slide"}
-                            />
-                        </div>
-                        <div className="carousel-caption d-none d-md-block caption-animate animate__animated animate__fadeInUp">
-                            <h5 className="slider-title">
-                                <Link to={slide.link}>{slide.title}</Link>
-                            </h5>
-                            <p className="slider-desc">{slide.description}</p>
-                        </div>
-                    </div>
-                ))}
+            <div className="carousel-caption d-none d-md-block caption-animate">
+              <h5 className="slider-title">
+                <Link to={slide.link}>{slide.title}</Link>
+              </h5>
+              <p className="slider-desc">{slide.description}</p>
             </div>
+          </div>
+        ))}
+      </div>
 
-            {/* Arrows */}
-            <button
-                className="carousel-control-prev"
-                type="button"
-                data-bs-target={`#${carouselId}`}
-                data-bs-slide="prev"
-            >
-                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span className="visually-hidden">Previous</span>
-            </button>
-            <button
-                className="carousel-control-next"
-                type="button"
-                data-bs-target={`#${carouselId}`}
-                data-bs-slide="next"
-            >
-                <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                <span className="visually-hidden">Next</span>
-            </button>
-        </div>
-    );
+      <button className="carousel-control-prev" type="button" data-bs-target="#mainSlider" data-bs-slide="prev">
+        <span className="carousel-control-prev-icon" aria-hidden="true" />
+        <span className="visually-hidden">Previous</span>
+      </button>
+      <button className="carousel-control-next" type="button" data-bs-target="#mainSlider" data-bs-slide="next">
+        <span className="carousel-control-next-icon" aria-hidden="true" />
+        <span className="visually-hidden">Next</span>
+      </button>
+    </div>
+  );
 };
 
 export default Slider;
