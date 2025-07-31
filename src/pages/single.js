@@ -34,7 +34,7 @@ const Single = () => {
     }
 
     useEffect(() => {
-     //   getReviews();
+        getReviews();
     }, [id]);
     useEffect(() => {
         let total = reviews?.reduce((acc, curr) => acc + Number(curr.star), 0);
