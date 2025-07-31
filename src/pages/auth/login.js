@@ -11,7 +11,6 @@ import LoadingButton from "../loader/loadingButton";
 import toast from "react-hot-toast";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-
 const Login = () => {
     const [error, setError] = useState("");
     const navigate = useNavigate();
