@@ -95,7 +95,7 @@ const MidHeader = ({ logo }) => {
                                         </NavLink>
                                     </div>
                                 </div>
-                                <div className="col-lg-6 col-sm-7 mid-header">
+                                <div className="col-lg-7 col-sm-7 mid-header">
                                     <div className="search-header-w">
                                         <div
                                             id="sosearchpro"
@@ -159,7 +159,7 @@ const MidHeader = ({ logo }) => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-lg-3 col-xs-6 col-sm-6 d-none d-lg-block mid-header text-right">
+                                <div className="col-lg-2 col-xs-6 col-sm-6 d-none d-lg-block mid-header text-right">
                                     <MiniCart />
                                 </div>
                             </div>
