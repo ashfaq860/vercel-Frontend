@@ -22,7 +22,7 @@ const Slider = () => {
     return (
         <>
             <div id="carouselExampleDark" className="carousel carousel-light slide" data-bs-ride="carousel">
-                {/* Dynamic Indicators */}
+                {/* Indicators */}
                 <div className="carousel-indicators">
                     {slides.map((_, index) => (
                         <button
@@ -37,7 +37,7 @@ const Slider = () => {
                     ))}
                 </div>
 
-                {/* Dynamic Slides */}
+                {/* Slides */}
                 <div className="carousel-inner">
                     {slides.map((slide, index) => (
                         <div
@@ -50,12 +50,40 @@ const Slider = () => {
                                 className="d-block w-100"
                                 alt={slide.title || "Slide Image"}
                                 height="450"
+                                style={{ objectFit: 'cover' }}
                             />
-                            <div className="carousel-caption d-none d-md-block">
-                                <h5>
-                                    <Link to={slide.link}>{slide.title}</Link>
+                            <div
+                                className="carousel-caption d-none d-md-block p-3 rounded"
+                                style={{
+                                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                                    backdropFilter: "blur(3px)",
+                                    borderRadius: "10px",
+                                }}
+                            >
+                                <h5
+                                    className="fw-bold mb-2"
+                                    style={{
+                                        fontSize: "2rem",
+                                        fontFamily: "'Poppins', sans-serif",
+                                        color: "#fdd835",
+                                        textShadow: "1px 1px 4px #000",
+                                    }}
+                                >
+                                    <Link to={slide.link} className="text-decoration-none" style={{ color: "#fdd835" }}>
+                                        {slide.title}
+                                    </Link>
                                 </h5>
-                                <p>{slide.description}</p>
+                                <p
+                                    className="mb-0"
+                                    style={{
+                                        fontSize: "1.1rem",
+                                        fontFamily: "'Poppins', sans-serif",
+                                        color: "#ffffff",
+                                        textShadow: "1px 1px 3px #000",
+                                    }}
+                                >
+                                    {slide.description}
+                                </p>
                             </div>
                         </div>
                     ))}
