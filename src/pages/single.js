@@ -17,6 +17,7 @@ import toast from 'react-hot-toast';
 import { useDispatch } from "react-redux";
 const Single = () => {
     const { id } = useParams();
+    console.log(id);
     const dispatch = useDispatch();
     /*get all reviews function */
     const [totalReviews, setTotalReviews] = useState(0);
