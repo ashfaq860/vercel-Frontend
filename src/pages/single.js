@@ -253,7 +253,8 @@ const Single = () => {
                                                 {<WriteReview pId={id} />}
                                             </div>
                                             <div className="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="Reviews">
-                                                    <ReviewList pId={id} reviews={reviews} />
+                            {/*   <ReviewList pId={id} reviews={reviews} />
+                                */}
                                                 </div>
                                             </div>
                                     </div>
