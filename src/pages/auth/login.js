@@ -29,6 +29,7 @@ const Login = () => {
     if (!validate()) return;
 
     try {
+    
       const response = await loginUser({ emailPhone, password });
 
       if (response.status === 200) {
