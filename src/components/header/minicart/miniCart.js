@@ -1,7 +1,7 @@
 // src/components/MiniCart.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './MiniCart.css';
+import './miniCart.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeFromCart } from '../store/cartSlice';
 
