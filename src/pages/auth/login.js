@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../api/internal';
-import { setUser } from '../store/userSlice';
+import { loginUser } from '../../api/internal';
+import { setUser } from '../../store/userSlice';
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import toast from 'react-hot-toast';
