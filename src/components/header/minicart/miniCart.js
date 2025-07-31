@@ -2,7 +2,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import './MiniCart.css';
+import './miniCart.css';
 
 const MiniCart = () => {
   const cart = useSelector((state) => state.cart.items);
@@ -11,18 +11,18 @@ const MiniCart = () => {
   return (
     <div className="mini-cart-wrapper dropdown">
       <div
-        className="mini-cart-display dropdown-toggle"
+        className="mini-cart-display d-flex align-items-center gap-2 dropdown-toggle"
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
-        <div className="icon-section">
-          <i className="bi bi-bag"></i>
+        <div className="cat-icon position-relative">
+          <i className="bi bi-bag fs-4 text-dark"></i>
           <span className="cart-badge">{cart.length}</span>
         </div>
 
-        <div className="summary-section">
-          <span className="summary-label">Your Cart</span>
-          <span className="summary-price">Rs.{total.toFixed(2)}</span>
+        <div className="cat-summery text-end">
+          <div className="text-muted small">Your Cart</div>
+          <div className="fw-bold">Rs.{total.toFixed(2)}</div>
         </div>
       </div>
 
