@@ -52,7 +52,7 @@ export const getGeneralSetting = async () => {
     return response;
 }
 // user functions
-export const login = async (data) => {
+export const loginUser = async (data) => {
     let response;
     try {
         response = await api.post('/login', data);
