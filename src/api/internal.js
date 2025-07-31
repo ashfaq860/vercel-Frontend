@@ -18,7 +18,6 @@ api.interceptors.request.use(
         return Promise.reject(error);
     }
 );
-
 // Response interceptor: stop progress bar
 api.interceptors.response.use(
     (response) => {
