@@ -53,7 +53,7 @@ const Single = () => {
         const response = await getProductById(id);
         if (response) {
             setProduct(response?.data?.product);
-          //  console.log(response?.data?.product);
+        console.log(response?.data?.product);
         }
     }
 
