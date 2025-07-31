@@ -3,18 +3,18 @@ import { Link } from "react-router-dom";
 import { getSliderImages } from "../../api/internal";
 import "./Slider.css";
 
-// Unique ID for carousel
+// Stable ID for Bootstrap to recognize
 const carouselId = "homepageSlider";
 
 const Slider = () => {
     const [slides, setSlides] = useState([]);
 
     useEffect(() => {
-        const getSlider = async () => {
+        const fetchSlides = async () => {
             const res = await getSliderImages();
             setSlides(res.data);
         };
-        getSlider();
+        fetchSlides();
     }, []);
 
     const getImageSrc = (slide) => {
@@ -24,8 +24,13 @@ const Slider = () => {
     };
 
     return (
-        <div id={carouselId} className="carousel carousel-fade slide" data-bs-ride="carousel" data-bs-interval="7000">
-            {/* Indicators */}
+        <div
+            id={carouselId}
+            className="carousel slide carousel-fade"
+            data-bs-ride="carousel"
+            data-bs-interval="5000"
+        >
+            {/* Dots */}
             <div className="carousel-indicators">
                 {slides.map((_, index) => (
                     <button
@@ -36,7 +41,7 @@ const Slider = () => {
                         className={index === 0 ? "active" : ""}
                         aria-current={index === 0 ? "true" : undefined}
                         aria-label={`Slide ${index + 1}`}
-                    ></button>
+                    />
                 ))}
             </div>
 
@@ -52,10 +57,9 @@ const Slider = () => {
                                 src={getImageSrc(slide)}
                                 className="d-block w-100 slider-img"
                                 alt={slide.title || "Slide"}
-                                height="450"
                             />
                         </div>
-                        <div className="carousel-caption d-none d-md-block caption-animate">
+                        <div className="carousel-caption d-none d-md-block caption-animate animate__animated animate__fadeInUp">
                             <h5 className="slider-title">
                                 <Link to={slide.link}>{slide.title}</Link>
                             </h5>
@@ -66,11 +70,21 @@ const Slider = () => {
             </div>
 
             {/* Arrows */}
-            <button className="carousel-control-prev" type="button" data-bs-target={`#${carouselId}`} data-bs-slide="prev">
+            <button
+                className="carousel-control-prev"
+                type="button"
+                data-bs-target={`#${carouselId}`}
+                data-bs-slide="prev"
+            >
                 <span className="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span className="visually-hidden">Previous</span>
             </button>
-            <button className="carousel-control-next" type="button" data-bs-target={`#${carouselId}`} data-bs-slide="next">
+            <button
+                className="carousel-control-next"
+                type="button"
+                data-bs-target={`#${carouselId}`}
+                data-bs-slide="next"
+            >
                 <span className="carousel-control-next-icon" aria-hidden="true"></span>
                 <span className="visually-hidden">Next</span>
             </button>
