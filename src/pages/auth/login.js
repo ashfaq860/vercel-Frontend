@@ -1,261 +1,135 @@
-import { Link } from "react-router-dom";
-import Layout from "../../components/layout/layout";
-import { useFormik } from "formik";
-import { useState, useEffect } from "react";
-import loginSchema from "../schemas/loginSchema";
-import { login } from "../../api/internal";
-import { setUser } from "../../store/userSlice";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import LoadingButton from "../loader/loadingButton";
-import toast from "react-hot-toast";
-import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
-
-// Ensure you import Bootstrap Icons somewhere in your app (e.g., in App.js or index.js):
-// import 'bootstrap-icons/font/bootstrap-icons.css';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { loginUser } from '../api/internal';
+import { useNavigate } from 'react-router-dom';
+import { setUser } from '../store/userSlice';
+import { useDispatch } from 'react-redux';
+import { useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const Login = () => {
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [show, setShow] = useState(false);
-  const [eye, setEye] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    if (values.isRememberMe) {
-      localStorage.setItem("rememberEmail", values.user);
-      localStorage.setItem("rememberPassword", values.password);
-    } else {
-      localStorage.removeItem("rememberEmail");
-      localStorage.removeItem("rememberPassword");
-    }
+  const [emailPhone, setEmailPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
-    setLoading(true);
-    const data = {
-      user: values.user,
-      password: values.password,
-    };
-
-    const response = await login(data);
-    if (response.status === 201) {
-      setLoading(false);
-      const user = {
-        _id: response.data.user._id,
-        email: response.data.user.email,
-        username: response.data.user.name,
-        phone: response.data.user.phone,
-        address: response.data.user.address,
-        auth: response.data.auth,
-        role: response.data.user.role,
-        province: response.data.user.province,
-        city: response.data.user.city,
-        photo: response.data.user.photo,
-      };
-      dispatch(setUser(user));
-      navigate("/admin/my-account");
-    } else if (response.code === "ERR_BAD_REQUEST") {
-      setLoading(false);
-      toast.error(response.response.data.message);
-      console.log("Error while logging in " + response.response.data.message);
-    }
-  };
-
-  useEffect(() => {
-    const savedEmail = localStorage.getItem("rememberEmail");
-    const savedPassword = localStorage.getItem("rememberPassword");
-    if (savedEmail && savedPassword) {
-      setFieldValue("user", savedEmail);
-      setFieldValue("password", savedPassword);
-      setFieldValue("isRememberMe", true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const {
-    values,
-    touched,
-    handleBlur,
-    handleChange,
-    errors,
-    setFieldValue,
-  } = useFormik({
-    initialValues: {
-      user: "",
-      password: "",
-      isRememberMe: false,
-    },
-    validationSchema: loginSchema,
-  });
-
-  const showPass = () => {
-    setEye(!eye);
-    const input = document.getElementById("password");
-    input.type = input.type === "password" ? "text" : "password";
-  };
-
-  const handleGoogleSuccess = async (credentialResponse) => {
+  const login = async () => {
     try {
-      const decoded = jwtDecode(credentialResponse.credential);
-      const googleData = {
-        user: decoded.email,
-        name: decoded.name,
-        googleId: decoded.sub,
-        picture: decoded.picture,
-      };
-
-      const response = await login(googleData);
-
-      if (response.status === 201) {
+      const response = await loginUser({ emailPhone, password });
+      if (response.status === 200) {
         const user = {
           _id: response.data.user._id,
           email: response.data.user.email,
-          username: response.data.user.name,
-          phone: response.data.user.phone,
-          address: response.data.user.address,
-          auth: response.data.auth,
-          role: response.data.user.role,
+          name: response.data.user.name,
         };
         dispatch(setUser(user));
-        navigate("/admin/my-account");
-      } else {
-        toast.error("Google login failed.");
+        toast.success('Login successful');
+        navigate('/');
       }
     } catch (error) {
-      console.error(error);
-      toast.error("An error occurred during Google login.");
+      toast.error(error.response?.data?.message || 'Login failed');
     }
   };
 
+  const loginWithGoogle = useGoogleLogin({
+    onSuccess: async (response) => {
+      try {
+        const res = await axios.post(
+          `${import.meta.env.VITE_REACT_APP_INTERNAL_API}/google-auth`,
+          { access_token: response.access_token },
+          { withCredentials: true }
+        );
+
+        if (res.status === 200) {
+          const user = {
+            _id: res.data.user._id,
+            email: res.data.user.email,
+            name: res.data.user.name,
+          };
+          dispatch(setUser(user));
+          toast.success('Google login successful');
+          navigate('/');
+        }
+      } catch (err) {
+        toast.error('Google login failed');
+      }
+    },
+  });
+
   return (
-    <Layout>
-      <div className="d-flex align-items-center min-vh-100 bg-light">
-        <div className="container py-5">
-          <div className="row justify-content-center">
-            <div className="col-md-7 col-lg-6 col-xl-5">
-              <div className="card shadow border-0 rounded-4">
-                <div className="card-body p-4 p-sm-5">
-                  <div className="text-center mb-4">
-                    <h2 className="fw-bold text-primary">Welcome Back</h2>
-                    <p className="text-muted">Login to access your account</p>
-                  </div>
+    <div className="container d-flex align-items-center justify-content-center min-vh-100">
+      <div className="card shadow p-4" style={{ maxWidth: '420px', width: '100%' }}>
+        <h3 className="text-center mb-4">Sign in to your account</h3>
 
-                  <form onSubmit={handleLogin}>
-                    {/* Email or Phone */}
-                    <div className="mb-3 position-relative">
-                      <div className="input-group">
-                        <span className="input-group-text bg-white border-end-0">
-                          <i className={`bi ${values.user.includes("@") ? "bi-envelope" : "bi-telephone"} text-muted`}></i>
-                        </span>
-                        <input
-                          type="text"
-                          name="user"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.user}
-                          className="form-control border-start-0"
-                          placeholder="Email or Phone Number"
-                        />
-                      </div>
-                      {errors.user && touched.user && (
-                        <div className="text-danger small mt-1">{errors.user}</div>
-                      )}
-                    </div>
+        <div className="mb-3">
+          <label htmlFor="emailPhone" className="form-label">Email or Phone Number</label>
+          <input
+            type="text"
+            className="form-control"
+            id="emailPhone"
+            value={emailPhone}
+            onChange={(e) => setEmailPhone(e.target.value)}
+            placeholder="example@example.com"
+          />
+        </div>
 
-                    {/* Password */}
-                    <div className="mb-3 position-relative">
-                      <div className="input-group">
-                        <span className="input-group-text bg-white border-end-0">
-                          <i className="bi bi-lock text-muted"></i>
-                        </span>
-                        <input
-                          type="password"
-                          id="password"
-                          name="password"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.password}
-                          className="form-control border-start-0 pe-5"
-                          placeholder="Password"
-                        />
-                        <button
-                          type="button"
-                          onClick={showPass}
-                          className="btn position-absolute top-0 end-0 bottom-0 d-flex align-items-center px-3 bg-transparent border-0"
-                        >
-                          <i className={`bi ${eye ? "bi-eye-slash" : "bi-eye"} text-muted`}></i>
-                        </button>
-                      </div>
-                      {errors.password && touched.password && (
-                        <div className="text-danger small mt-1">{errors.password}</div>
-                      )}
-                    </div>
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">Password</label>
+          <input
+            type="password"
+            className="form-control"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
+          />
+        </div>
 
-                    {/* Remember Me & Forgot */}
-                    <div className="d-flex justify-content-between align-items-center mb-3">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="rememberMe"
-                          name="isRememberMe"
-                          checked={values.isRememberMe}
-                          onChange={handleChange}
-                        />
-                        <label className="form-check-label small" htmlFor="rememberMe">
-                          Remember me
-                        </label>
-                      </div>
-                      <Link to="/forgotpassword" className="small text-decoration-none">
-                        Forgot password?
-                      </Link>
-                    </div>
-
-                    {/* Submit */}
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="btn btn-primary w-100 py-2 mb-3 shadow-sm"
-                    >
-                      <LoadingButton loading={loading} title="Sign In" />
-                    </button>
-
-                    {error && <div className="alert alert-danger small mb-3">{error}</div>}
-
-                    {/* OR Divider */}
-                    <div className="d-flex align-items-center my-4">
-                      <hr className="flex-grow-1" />
-                      <span className="px-3 text-muted small">OR</span>
-                      <hr className="flex-grow-1" />
-                    </div>
-
-                    {/* Google Login */}
-                    <div className="d-flex justify-content-center mb-3">
-                      <GoogleLogin
-                        onSuccess={handleGoogleSuccess}
-                        onError={() => toast.error("Google login failed.")}
-                      />
-                    </div>
-
-                    {/* Sign Up Link */}
-                    <div className="text-center mt-4">
-                      <p className="small text-muted mb-0">
-                        Don't have an account?{" "}
-                        <Link to="/register" className="text-decoration-none fw-semibold">
-                          Sign up
-                        </Link>
-                      </p>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <div className="form-check">
+            <input
+              type="checkbox"
+              className="form-check-input"
+              id="rememberMe"
+              checked={rememberMe}
+              onChange={() => setRememberMe(!rememberMe)}
+            />
+            <label className="form-check-label" htmlFor="rememberMe">Remember me</label>
           </div>
+          <Link to="/forgot-password" className="text-decoration-none">Forgot password?</Link>
+        </div>
+
+        <button
+          className="btn btn-primary w-100 mb-3"
+          onClick={login}
+          disabled={!emailPhone || !password}
+        >
+          Sign In
+        </button>
+
+        <div className="text-center mb-3">Or continue with</div>
+
+        <button
+          className="btn btn-outline-dark w-100 mb-4 d-flex align-items-center justify-content-center gap-2"
+          onClick={() => loginWithGoogle()}
+        >
+          <img
+            src="https://developers.google.com/identity/images/g-logo.png"
+            alt="Google"
+            width="20"
+            height="20"
+          />
+          Sign in with Google
+        </button>
+
+        <div className="text-center">
+          Not a member? <Link to="/register">Register now</Link>
         </div>
       </div>
-    </Layout>
+    </div>
   );
 };
 
