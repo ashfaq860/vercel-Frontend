@@ -3,7 +3,7 @@ import Layout from "../../components/layout/layout";
 import { useFormik } from "formik";
 import { useState, useEffect } from "react";
 import loginSchema from "../schemas/loginSchema";
-import { login } from "../../api/internal";
+import { loginUser } from "../../api/internal";
 import { setUser } from "../../store/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -35,7 +35,7 @@ const Login = () => {
             password: values.password,
         };
 
-        const response = await login(data);
+        const response = await loginUser(data);
         if (response.status === 201) {
             setLoading(false);
             const user = {
