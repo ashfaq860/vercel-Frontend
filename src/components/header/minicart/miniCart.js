@@ -22,7 +22,7 @@ const MiniCart = () => {
 
   return (
     <div className="mini-cart-wrapper">
-      <div className="mini-cart-button d-flex justify-content-end align-items-center">
+      <div className="mini-cart-button d-flex justify-content-center mt-2 align-items-center">
         <div className="cart-icon d-flex align-items-center" data-bs-toggle="dropdown" role="button">
           <div className="icon position-relative me-2">
             <i className="bi bi-cart4 fs-4 text-dark"></i>
