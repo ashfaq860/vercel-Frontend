@@ -17,7 +17,7 @@ import toast from 'react-hot-toast';
 import { useDispatch } from "react-redux";
 const Single = () => {
     const { id } = useParams();
-    console.log(id);
+   // console.log(id);
     const dispatch = useDispatch();
     /*get all reviews function */
     const [totalReviews, setTotalReviews] = useState(0);
@@ -53,7 +53,7 @@ const Single = () => {
         const response = await getProductById(id);
         if (response) {
             setProduct(response?.data?.product);
-        console.log(response?.data?.product);
+        console.log(response?.data?.product?.category?._id);
         }
     }
 
