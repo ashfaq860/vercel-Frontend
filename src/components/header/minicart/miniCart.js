@@ -1,88 +1,67 @@
-import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+// src/components/MiniCart.js
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { removeItem } from '../../../store/cartSlice';
-import './miniCart.css';
+import './MiniCart.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { removeFromCart } from '../store/cartSlice';
+
 const MiniCart = () => {
-    const cart = useSelector((state) => state.cart);
-    const dispatch = useDispatch();
-    const [miniCart, setMiniCart] = useState([]);
-    const [total, setTotal] = useState(0);
-    const [shippingCost, setShippingCost] = useState(0);
+  const dispatch = useDispatch();
+  const cart = useSelector(state => state.cart.items);
 
-    useEffect(() => {
-        setMiniCart(cart.cart);
-        let totalAmount = cart?.cart?.reduce((acc, curr) => acc + (curr.price * curr.qty), 0);
-        let totalShippingCost = cart?.cart?.reduce((acc, curr) => acc + (curr.shippingCost * curr.qty), 0);
-        setShippingCost(totalShippingCost);
-        setTotal(totalAmount);
-    }, [cart.cart]);
+  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-    const RemoveItem = (id) => {
-        dispatch(removeItem(id));
-    };
+  const handleRemove = (id) => {
+    dispatch(removeFromCart(id));
+  };
 
-    return (
-        <div className="modern-minicart dropdown">
-            <div className="cart-icon-wrapper dropdown-toggle" data-bs-toggle="dropdown">
-                <div className="icon-container position-relative">
-                    <i className="bi bi-bag" style={{ fontSize: '1.5rem' }}></i>
-                    <span className="cart-badge">{miniCart.length}</span>
-                </div>
-                <div className="cart-summary">
-                    <div className="text-muted small">Your Cart</div>
-                    <div className="fw-bold">Rs.{total.toFixed(2)}</div>
-                </div>
-            </div>
-
-            <ul className="dropdown-menu dropdown-menu-end p-3 shadow-lg minicart-dropdown">
-                {miniCart.length > 0 ? (
-                    <>
-                        <div className="minicart-items">
-                            {miniCart.map((item) => (
-                                <div key={item.id} className="d-flex align-items-center mb-2">
-                                    <img src={item.photo} alt={item.name} width="40" height="40" className="rounded me-2" />
-                                    <div className="flex-grow-1">
-                                        <small>{item.name}</small>
-                                        <div className="small text-muted">x{item.qty}</div>
-                                    </div>
-                                    <div className="text-end">
-                                        <small>Rs.{item.price * item.qty}</small>
-                                        <span
-                                            onClick={() => RemoveItem(item.id)}
-                                            className="text-danger ms-2 pointer"
-                                            title="Remove"
-                                            style={{ cursor: 'pointer' }}
-                                        >
-                                            <i className="bi bi-x-circle-fill"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        <hr />
-
-                        <div className="d-flex justify-content-between small">
-                            <span>Shipping</span>
-                            <span>Rs.{shippingCost.toFixed(2)}</span>
-                        </div>
-                        <div className="d-flex justify-content-between fw-bold">
-                            <span>Total</span>
-                            <span>Rs.{(total + shippingCost).toFixed(2)}</span>
-                        </div>
-
-                        <div className="mt-3 d-grid gap-2">
-                            <Link to="/cart" className="btn btn-outline-dark btn-sm">View Cart</Link>
-                            <Link to="/checkout" className="btn btn-dark btn-sm">Checkout</Link>
-                        </div>
-                    </>
-                ) : (
-                    <div className="text-center text-muted">Cart is empty</div>
-                )}
-            </ul>
+  return (
+    <div className="mini-cart-wrapper dropdown">
+      <div
+        className="cart-icon-wrapper dropdown-toggle"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        <div className="icon-container">
+          <i className="bi bi-bag"></i>
+          <span className="cart-badge">{cart.length}</span>
         </div>
-    );
+        <div className="cart-summary">
+          <div className="cart-text">Your Cart</div>
+          <div className="cart-price">Rs.{total.toFixed(2)}</div>
+        </div>
+      </div>
+
+      <ul className="dropdown-menu mini-cart-dropdown p-3">
+        {cart.length === 0 ? (
+          <li className="text-muted small">Your cart is empty</li>
+        ) : (
+          <>
+            {cart.map((item) => (
+              <li key={item.id} className="mini-cart-item d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <div className="fw-semibold">{item.name}</div>
+                  <div className="text-muted small">
+                    {item.quantity} × Rs.{item.price}
+                  </div>
+                </div>
+                <span
+                  className="remove-item"
+                  onClick={() => handleRemove(item.id)}
+                  title="Remove item"
+                >
+                  <i className="bi bi-trash-fill"></i>
+                </span>
+              </li>
+            ))}
+            <li className="mt-2 text-end">
+              <Link to="/cart" className="btn btn-sm btn-dark w-100">Go to Cart</Link>
+            </li>
+          </>
+        )}
+      </ul>
+    </div>
+  );
 };
 
 export default MiniCart;
