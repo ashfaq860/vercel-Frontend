@@ -116,26 +116,26 @@ const MiniCart = () => {
                     color: #dc3545;
                 }
                 .basket-txt {
-                    display: flex;
-                    flex-direction: column;
-                    margin-left: 5px;
+                    display: flex !important;
+                    flex-direction: column !important;
+                    margin-left: 5px !important;
                 }
                 .basket-icon {
-                    position: relative;
+                    position: relative !important;
                 }
                 .bskt-qty {
-                    position: absolute;
-                    top: -5px;
-                    right: -10px;
-                    background: red;
-                    color: white;
-                    font-size: 12px;
-                    width: 20px;
-                    height: 20px;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
+                    position: absolute !important;
+                    top: -5px !important;
+                    right: -10px !important;
+                    background: red !important;
+                    color: white !important;
+                    font-size: 12px !important;
+                    width: 20px !important;
+                    height: 20px !important;
+                    border-radius: 50% !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
                 }
             `}</style>
         </>
