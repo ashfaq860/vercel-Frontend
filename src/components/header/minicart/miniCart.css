@@ -1,68 +1,104 @@
-.bskt-icon {
-    position: relative;
-    display: inline-block;
-    font-size: 1.4rem;
+/* Cart Button Area */
+.min-shopping-cart {
+  position: relative;
+  z-index: 10;
+}
+
+/* Cart Button Inline Layout */
+.btn-shoppingCart .dropdown-toggle1 {
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.95rem;
+}
+
+.basket-icon {
+  font-size: 1.5rem;
+}
+
+.bskt-icon i {
+  color: #343a40;
 }
 
 .bskt-qty {
-    font-size: 0.65rem;
-    padding: 2px 5px;
+  font-size: 0.65rem;
+  padding: 0.25em 0.45em;
+  z-index: 99;
 }
 
-.basket-txt {
-    line-height: 1.2;
+/* Dropdown Menu Styling */
+.min-shopping-cart .dropdown-menu {
+  width: 100%;
+  min-width: 300px;
+  right: 0;
+  left: auto;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15);
+  animation: fadeInDropdown 0.3s ease-in-out;
 }
 
-.mini-cart-container {
-    padding-right: 1rem;
+/* Dropdown Fade In Animation */
+@keyframes fadeInDropdown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.cart-icon-wrapper {
-    position: relative;
+/* Table Cell Padding */
+.min-shopping-cart table td {
+  padding: 0.35rem 0.5rem;
+  vertical-align: middle;
 }
 
-.cart-trigger {
-    cursor: pointer;
+/* Fade in for newly added items */
+@keyframes fadeInCartItem {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.cart-icon {
-    position: relative;
-    color: #444;
+.fade-in-cart-item {
+  animation: fadeInCartItem 0.3s ease-in;
 }
 
-.cart-badge {
-    position: absolute;
-    top: -6px;
-    right: -10px;
-    background: #dc3545;
-    color: #fff;
-    font-size: 0.7rem;
-    padding: 2px 6px;
-    border-radius: 999px;
-    font-weight: bold;
+/* Fade out for removed items */
+@keyframes fadeOutCartItem {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
 }
 
-.cart-summary {
-    font-size: 0.85rem;
+.fade-out-cart-item {
+  animation: fadeOutCartItem 0.3s ease-out forwards;
 }
 
-.cart-summary .cart-label {
-    color: #888;
+/* Responsive Image in Table */
+.min-shopping-cart img {
+  max-width: 45px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
 }
 
-.cart-summary .cart-total {
-    font-weight: 600;
-    color: #333;
-}
-
-.mini-cart-dropdown {
-    width: 280px;
-    max-height: 380px;
-    overflow-y: auto;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-    border-radius: 0.5rem;
-}
-
-.cart-totals {
-    font-size: 0.85rem;
+/* Button Spacing */
+.min-shopping-cart .btn-sm {
+  font-size: 0.75rem;
+  padding: 0.35rem 0.6rem;
 }
