@@ -1,49 +1,96 @@
-/* Cart Button Area */
+/* ==== RESET OLD STYLES ==== */
+.min-shopping-cart * {
+  all: unset;
+  box-sizing: border-box;
+}
+
 .min-shopping-cart {
   position: relative;
-  z-index: 10;
+  z-index: 1050;
+  font-family: "Segoe UI", Roboto, sans-serif;
 }
 
-/* Cart Button Inline Layout */
-.btn-shoppingCart .dropdown-toggle1 {
+/* ==== CART ICON & SUMMARY INLINE ==== */
+.min-shopping-cart .cart-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+/* ==== BASKET ICON + BADGE ==== */
+.min-shopping-cart .cart-icon {
+  position: relative;
+  font-size: 1.6rem;
+  color: #333;
   cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 0.95rem;
 }
 
-.basket-icon {
-  font-size: 1.5rem;
+.min-shopping-cart .cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background: #dc3545;
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  font-weight: bold;
 }
 
-.bskt-icon i {
-  color: #343a40;
+/* ==== CART SUMMARY BUTTONS ==== */
+.min-shopping-cart .cart-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: flex-end;
 }
 
-.bskt-qty {
-  font-size: 0.65rem;
-  padding: 0.25em 0.45em;
-  z-index: 99;
+.min-shopping-cart .cart-summary .btn {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: background 0.3s ease;
 }
 
-/* Dropdown Menu Styling */
+.min-shopping-cart .cart-summary .btn-outline-dark:hover {
+  background-color: #343a40;
+  color: #fff;
+}
+
+.min-shopping-cart .cart-summary .btn-dark {
+  background-color: #212529;
+  color: #fff;
+}
+
+.min-shopping-cart .cart-summary .btn-dark:hover {
+  background-color: #000;
+}
+
+/* ==== DROPDOWN MENU ==== */
 .min-shopping-cart .dropdown-menu {
-  width: 100%;
-  min-width: 300px;
+  min-width: 320px;
   right: 0;
   left: auto;
+  top: 110%;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  background: #fff;
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15);
+  animation: dropdownFade 0.25s ease;
+  border-radius: 6px;
   max-height: 400px;
   overflow-y: auto;
-  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15);
-  animation: fadeInDropdown 0.3s ease-in-out;
 }
 
-/* Dropdown Fade In Animation */
-@keyframes fadeInDropdown {
+@keyframes dropdownFade {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-6px);
   }
   to {
     opacity: 1;
@@ -51,13 +98,15 @@
   }
 }
 
-/* Table Cell Padding */
-.min-shopping-cart table td {
-  padding: 0.35rem 0.5rem;
-  vertical-align: middle;
+/* ==== ITEM IMAGE ==== */
+.min-shopping-cart img {
+  max-width: 50px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
 }
 
-/* Fade in for newly added items */
+/* ==== CART ITEM ROW ANIMATIONS ==== */
 @keyframes fadeInCartItem {
   from {
     opacity: 0;
@@ -69,11 +118,6 @@
   }
 }
 
-.fade-in-cart-item {
-  animation: fadeInCartItem 0.3s ease-in;
-}
-
-/* Fade out for removed items */
 @keyframes fadeOutCartItem {
   from {
     opacity: 1;
@@ -85,20 +129,39 @@
   }
 }
 
+.fade-in-cart-item {
+  animation: fadeInCartItem 0.3s ease-in;
+}
+
 .fade-out-cart-item {
   animation: fadeOutCartItem 0.3s ease-out forwards;
 }
 
-/* Responsive Image in Table */
-.min-shopping-cart img {
-  max-width: 45px;
-  height: auto;
-  object-fit: cover;
-  border-radius: 4px;
+/* ==== CART TABLE ==== */
+.min-shopping-cart table {
+  width: 100%;
+  font-size: 0.85rem;
 }
 
-/* Button Spacing */
-.min-shopping-cart .btn-sm {
-  font-size: 0.75rem;
-  padding: 0.35rem 0.6rem;
+.min-shopping-cart td {
+  padding: 0.4rem 0.3rem;
+  vertical-align: middle;
+}
+
+.min-shopping-cart .cart-remove-btn {
+  background: transparent;
+  border: none;
+  color: #dc3545;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* ==== SCROLLBAR ==== */
+.min-shopping-cart .dropdown-menu::-webkit-scrollbar {
+  width: 5px;
+}
+.min-shopping-cart .dropdown-menu::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
 }
