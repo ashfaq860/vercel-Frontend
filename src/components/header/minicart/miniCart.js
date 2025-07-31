@@ -16,19 +16,21 @@ const MiniCart = () => {
   };
 
   return (
-    <div className="mini-cart-wrapper dropdown">
+    <div className="mini-cart-container">
       <div
-        className="cart-icon-wrapper dropdown-toggle"
+        className="mini-cart-toggle dropdown-toggle"
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
-        <div className="icon-container">
-          <i className="bi bi-bag"></i>
-          <span className="cart-badge">{cart.length}</span>
-        </div>
-        <div className="cart-summary">
-          <div className="cart-text">Your Cart</div>
-          <div className="cart-price">Rs.{total.toFixed(2)}</div>
+        <div className="mini-cart-inline">
+          <div className="icon-badge">
+            <i className="bi bi-bag"></i>
+            <span className="badge">{cart.length}</span>
+          </div>
+          <div className="cart-summary-text">
+            <span className="cart-label">Your Cart</span>
+            <span className="cart-total">Rs.{total.toFixed(2)}</span>
+          </div>
         </div>
       </div>
 
@@ -38,7 +40,7 @@ const MiniCart = () => {
         ) : (
           <>
             {cart.map((item) => (
-              <li key={item.id} className="mini-cart-item d-flex justify-content-between align-items-start mb-2">
+              <li key={item.id} className="mini-cart-item d-flex justify-content-between mb-2">
                 <div>
                   <div className="fw-semibold">{item.name}</div>
                   <div className="text-muted small">
