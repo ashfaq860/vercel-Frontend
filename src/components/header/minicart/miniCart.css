@@ -5,22 +5,10 @@
   justify-content: flex-end;
 }
 
-.mini-cart-display {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  cursor: pointer;
-}
-
-.icon-section {
+.cat-icon {
   position: relative;
   display: flex;
   align-items: center;
-}
-
-.icon-section i {
-  font-size: 1.5rem;
-  color: #333;
 }
 
 .cart-badge {
@@ -39,22 +27,10 @@
   font-weight: 600;
 }
 
-.summary-section {
+.cat-summery {
   display: flex;
   flex-direction: column;
-  text-align: right;
   line-height: 1;
-}
-
-.summary-label {
-  font-size: 0.75rem;
-  color: #888;
-}
-
-.summary-price {
-  font-size: 1rem;
-  font-weight: bold;
-  color: #222;
 }
 
 .mini-cart-dropdown {
