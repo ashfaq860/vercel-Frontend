@@ -29,6 +29,7 @@ const Login = () => {
             localStorage.removeItem("rememberEmail");
             localStorage.removeItem("rememberPassword");
         }
+
         setLoading(true);
         const data = {
             user: values.user,
@@ -50,7 +51,7 @@ const Login = () => {
                 city: response.data.user.city,
                 photo: response.data.user.photo
             };
-            dispatch(setUser(user)); // Already contains all needed fields // Already contains all needed fields));
+            dispatch(setUser(user));
             navigate("/admin/my-account");
         } else if (response.code === "ERR_BAD_REQUEST") {
             setLoading(false);
@@ -88,7 +89,7 @@ const Login = () => {
     };
 
     const showPass = () => {
-        if (eye === false) {
+        if (!eye) {
             setEye(true);
             document.getElementById("password").setAttribute("type", "text");
         } else {
@@ -96,7 +97,7 @@ const Login = () => {
             document.getElementById("password").setAttribute("type", "password");
         }
     };
-    
+
     const handleGoogleSuccess = async (credentialResponse) => {
         try {
             const decoded = jwtDecode(credentialResponse.credential);
@@ -107,8 +108,7 @@ const Login = () => {
                 picture: decoded.picture,
             };
 
-            // Call your backend
-            const response = await login( googleData );
+            const response = await loginUser(googleData);
 
             if (response.status === 201) {
                 const user = {
@@ -125,114 +125,113 @@ const Login = () => {
             } else {
                 toast.error("Google login failed.");
             }
-        }catch (error) {
+        } catch (error) {
             console.error(error);
             toast.error("An error occurred during Google login.");
         }
     };
 
     return (
-    <Layout>
-        <div className="container py-5">
-            <div className="row justify-content-center align-items-center min-vh-100">
-                <div className="col-12 col-sm-10 col-md-8 col-lg-5">
-                    <div className="card shadow-lg border-0 rounded-4 p-4">
-                        <div className="card-body">
-                            <h2 className="text-center mb-4 fw-bold">Login to Your Account</h2>
-                            <form onSubmit={handleLogin}>
-                                <div className="mb-3">
-                                    <label htmlFor="email" className="form-label">Email or Phone</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        name="user"
-                                        onChange={handleChange}
-                                        className={`form-control ${errors.email && touched.email ? 'is-invalid' : ''}`}
-                                        value={values.user}
-                                        onBlur={handleBlur}
-                                        id="email"
-                                        placeholder="Enter email or phone number"
-                                    />
-                                    {errors.email && touched.email && (
-                                        <div className="invalid-feedback">{errors.email}</div>
-                                    )}
-                                </div>
-
-                                <div className="mb-3 position-relative">
-                                    <label htmlFor="password" className="form-label">Password</label>
-                                    <input
-                                        type="password"
-                                        required
-                                        name="password"
-                                        id="password"
-                                        onChange={(e) => {
-                                            handleChange(e);
-                                            Password(e.target.value);
-                                        }}
-                                        onBlur={handleBlur}
-                                        value={values.password}
-                                        className="form-control"
-                                        placeholder="Enter password"
-                                    />
-                                    {show && (
-                                        <button
-                                            type="button"
-                                            onClick={showPass}
-                                            className="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2"
-                                        >
-                                            {eye ? "Hide" : "Show"}
-                                        </button>
-                                    )}
-                                </div>
-
-                                <div className="d-flex justify-content-between align-items-center mb-3">
-                                    <div className="form-check">
+        <Layout>
+            <div className="container py-5">
+                <div className="row justify-content-center align-items-center min-vh-100">
+                    <div className="col-12 col-sm-10 col-md-8 col-lg-5">
+                        <div className="card shadow-lg border-0 rounded-4 p-4">
+                            <div className="card-body">
+                                <h2 className="text-center mb-4 fw-bold">Login to Your Account</h2>
+                                <form onSubmit={handleLogin}>
+                                    <div className="mb-3">
+                                        <label htmlFor="email" className="form-label">Email or Phone</label>
                                         <input
-                                            id="option1"
-                                            type="checkbox"
-                                            name="isRememberMe"
-                                            checked={values.isRememberMe}
+                                            type="text"
+                                            required
+                                            name="user"
                                             onChange={handleChange}
-                                            className="form-check-input"
+                                            className={`form-control ${errors.email && touched.email ? 'is-invalid' : ''}`}
+                                            value={values.user}
+                                            onBlur={handleBlur}
+                                            id="email"
+                                            placeholder="Enter email or phone number"
                                         />
-                                        <label htmlFor="option1" className="form-check-label">
-                                            Remember Me
-                                        </label>
+                                        {errors.email && touched.email && (
+                                            <div className="invalid-feedback">{errors.email}</div>
+                                        )}
                                     </div>
-                                    <Link to="/forgotpassword" className="text-decoration-none small">
-                                        Forgot password?
-                                    </Link>
+
+                                    <div className="mb-3 position-relative">
+                                        <label htmlFor="password" className="form-label">Password</label>
+                                        <input
+                                            type="password"
+                                            required
+                                            name="password"
+                                            id="password"
+                                            onChange={(e) => {
+                                                handleChange(e);
+                                                Password(e.target.value);
+                                            }}
+                                            onBlur={handleBlur}
+                                            value={values.password}
+                                            className="form-control"
+                                            placeholder="Enter password"
+                                        />
+                                        {show && (
+                                            <button
+                                                type="button"
+                                                onClick={showPass}
+                                                className="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2"
+                                            >
+                                                {eye ? "Hide" : "Show"}
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    <div className="d-flex justify-content-between align-items-center mb-3">
+                                        <div className="form-check">
+                                            <input
+                                                id="option1"
+                                                type="checkbox"
+                                                name="isRememberMe"
+                                                checked={values.isRememberMe}
+                                                onChange={handleChange}
+                                                className="form-check-input"
+                                            />
+                                            <label htmlFor="option1" className="form-check-label">
+                                                Remember Me
+                                            </label>
+                                        </div>
+                                        <Link to="/forgotpassword" className="text-decoration-none small">
+                                            Forgot password?
+                                        </Link>
+                                    </div>
+
+                                    {error && <div className="text-danger mb-2">{error}</div>}
+
+                                    <button type="submit" className="btn btn-primary w-100 py-2">
+                                        <LoadingButton loading={loading} title="Login Now" />
+                                    </button>
+                                </form>
+
+                                <div className="text-center mt-4">
+                                    <span className="text-muted">Not a member?</span>
+                                    <Link to="/register" className="ms-1 text-decoration-none">Register</Link>
                                 </div>
 
-                                {error && <div className="text-danger mb-2">{error}</div>}
-
-                                <button type="submit" className="btn btn-primary w-100 py-2">
-                                    <LoadingButton loading={loading} title="Login Now" />
-                                </button>
-                            </form>
-
-                            <div className="text-center mt-4">
-                                <span className="text-muted">Not a member?</span>
-                                <Link to="/register" className="ms-1 text-decoration-none">Register</Link>
-                            </div>
-
-                            <div className="text-center mt-4">
-                                <span className="text-muted">OR</span>
-                                <div className="d-flex justify-content-center mt-3">
-                                    <GoogleLogin
-                                        onSuccess={handleGoogleSuccess}
-                                        onError={() => toast.error("Google login failed.")}
-                                    />
+                                <div className="text-center mt-4">
+                                    <span className="text-muted">OR</span>
+                                    <div className="d-flex justify-content-center mt-3">
+                                        <GoogleLogin
+                                            onSuccess={handleGoogleSuccess}
+                                            onError={() => toast.error("Google login failed.")}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </Layout>
-);
-
+        </Layout>
+    );
 };
 
 export default Login;
