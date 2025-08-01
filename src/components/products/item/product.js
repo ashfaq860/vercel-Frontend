@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../store/cartSlice";
 import toast from 'react-hot-toast';
-import {useScrollAnimation} from "./srollAnimation"; // ✅ Correct path here
+import useScrollAnimation from "./srollAnimation"; // ✅ Correct path here
 const Product = (props) => {
 	useScrollAnimation();
 	const dispatch = useDispatch();
