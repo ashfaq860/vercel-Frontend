@@ -1,10 +1,10 @@
 import { Bar } from "react-chartjs-2";
-import { Chart, BarElement, CategoryScale, LinearScale, Legend, Tooltip } from "chart.js";
+import { Chart, BarElement, CategoryScale, LinearScale, Legend, Tooltip,Filler } from "chart.js";
 import { useEffect } from "react";
 import { useState } from "react";
 import { getGrowthChartData } from "../../api/internal";
 
-Chart.register(BarElement, CategoryScale, LinearScale, Legend, Tooltip);
+Chart.register(BarElement, CategoryScale, LinearScale, Legend, Tooltip,Filler);
 
 export default function GrowthChart() {
     const [chartData, setChartData] = useState(null);
