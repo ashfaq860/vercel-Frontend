@@ -11,7 +11,7 @@ import { setUser } from "../store/userSlice";
 import LoadingButton from "./loader/loadingButton";
 
 import "./cart.css";
-
+const DEFAULT_SHIPPING = 50;
 const CheckOut = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
