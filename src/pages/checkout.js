@@ -234,50 +234,55 @@ const CheckOut = () => {
                                 ))}
                             </div>
 
-                            <h1>Shopping Cart</h1>
-                            <div className="table-responsive">
-                                <table className="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Image</th>
-                                            <th>Parts Name</th>
-                                            <th>Manufacturer & Model</th>
-                                            <th>Quantity</th>
-                                            <th>Unit Price</th>
-                                            <th>Shipping</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {cart.map((p, i) => {
-                                            const shipping = Number(p.shippingCost || 50);
-                                            return (
-                                                <tr key={i}>
-                                                    <td><img src={p.photo} alt={p.name} height="45" width="45" /></td>
-                                                    <td>{p.name}<br />{p.urduName}</td>
-                                                    <td>{p.category}<br />{p.manufacturer}</td>
-                                                    <td>
-                                                        <div className="input-group btn-block quantity">
-                                                            <input type="number" defaultValue={p.qty} onChange={(e) => setUpdateQTY(e.target.value)} className="form-control z-3 removeShadow" />
-                                                            <span className="input-group-btn">
-                                                                <button type="button" className="btn btn-primary rounded-0" onClick={() => UpdateCartItem(p.id)}>
-                                                                    <i className="bi bi-arrow-clockwise"></i>
-                                                                </button>
-                                                                <button type="button" className="btn btn-danger RemoveLeftRadius" onClick={() => removeCartItem(p.id)}>
-                                                                    <i className="bi bi-x-circle"></i>
-                                                                </button>
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <td>{p.price}</td>
-                                                    <td>Rs. {shipping} x {p.qty}</td>
-                                                    <td>{p.price * p.qty}</td>
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
-                            </div>
+                              <h1 className="my-3">Shopping Cart</h1>
+                <div className="table-responsive">
+                    <table className="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Parts Name</th>
+                                <th>Manufacturer & Model</th>
+                                <th>Qty</th>
+                                <th>Unit Price</th>
+                                <th>Shipping</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {cart.map((item, i) => {
+                                const itemShipping = Number(item.shippingCost || DEFAULT_SHIPPING);
+                                return (
+                                    <tr key={i}>
+                                        <td><img src={item.photo} alt={item.name} width="45" /></td>
+                                        <td>{item.name}<br />{item.urduName}</td>
+                                        <td>{item.category}<br />{item.manufacturer}</td>
+                                        <td>
+                                            <div className="input-group">
+                                                <input
+                                                    type="number"
+                                                    className="form-control"
+                                                    value={item.qty}
+                                                    onChange={(e) => {
+                                                        const newQty = Number(e.target.value);
+                                                        if (newQty >= 1 && !isNaN(newQty)) {
+                                                            dispatch(updateQuantity({ id: item.id, qty: newQty }));
+                                                        }
+                                                    }}
+                                                />
+                                                <button className="btn btn-danger" onClick={() => removeCartItem(item.id)}>
+                                                    <i className="bi bi-x-circle"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td>Rs. {item.price}</td>
+                                        <td>Rs. {itemShipping} x {item.qty}</td>
+                                        <td>Rs. {item.price * item.qty}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
 
                             <div className="d-flex justify-content-end">
                                 <div className="col-5">
