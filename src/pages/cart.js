@@ -63,8 +63,9 @@ const Cart = () => {
     }
 const handleChangeQuantity    =    (id,value)=>{
     alert(id,value);
+    UpdateCartItem(id);
 setUpdateQTY(prev => ({ ...prev, [id]: Number(value) }));
-UpdateCartItem(id);
+
 }
     return (
         <Layout>
