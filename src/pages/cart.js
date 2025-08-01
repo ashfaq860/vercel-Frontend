@@ -62,7 +62,7 @@ const Cart = () => {
         );
     }
 const handleChangeQuantity    =    (id,value)=>{
-setUpdateQTY(prev => ({ ...prev, [item.id]: Number(value) }));
+setUpdateQTY(prev => ({ ...prev, [id]: Number(value) }));
 UpdateCartItem(id);
 }
     return (
