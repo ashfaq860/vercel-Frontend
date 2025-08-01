@@ -1,5 +1,4 @@
-﻿import { Helmet } from 'react-helmet-async';
-
+import { Helmet } from 'react-helmet-async';
 import Layout from "../components/layout/layout";
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,7 +15,6 @@ const Cart = () => {
     const dispatch = useDispatch();
 
     const [cart, setCart] = useState([]);
-    const [updatedQTY, setUpdateQTY] = useState({});
     const [total, setTotal] = useState(0);
     const [shippingCost, setShippingCost] = useState(0);
     const [canCheckout, setCanCheckout] = useState(true);
@@ -45,14 +43,6 @@ const Cart = () => {
         }
     };
 
-    const UpdateCartItem = (id) => {
-        const qty = updatedQTY[id];
-        if (!qty || qty < 1) return toast.error("Invalid Quantity");
-
-        dispatch(updateQuantity({ id, qty }));
-        toast.success("Successfully Updated!");
-    };
-
     if (cart.length < 1) {
         return (
             <Layout>
@@ -61,12 +51,7 @@ const Cart = () => {
             </Layout>
         );
     }
-const handleChangeQuantity    =    (id,value)=>{
-    alert(id,value);
-    UpdateCartItem(id);
-setUpdateQTY(prev => ({ ...prev, [id]: Number(value) }));
 
-}
     return (
         <Layout>
             <Helmet>
@@ -101,11 +86,17 @@ setUpdateQTY(prev => ({ ...prev, [id]: Number(value) }));
                                                 <input
                                                     type="number"
                                                     className="form-control"
-                                                    defaultValue={item.qty}
-                                                    onChange={(e) => handleChangeQuantity(item.id, e.target.value)}
+                                                    value={item.qty}
+                                                    onChange={(e) => {
+                                                        const newQty = Number(e.target.value);
+                                                        if (newQty >= 1 && !isNaN(newQty)) {
+                                                            dispatch(updateQuantity({ id: item.id, qty: newQty }));
+                                                        }
+                                                    }}
                                                 />
-                                                <button className="btn btn-primary" onClick={() => UpdateCartItem(item.id)}><i className="bi bi-arrow-clockwise"></i></button>
-                                                <button className="btn btn-danger" onClick={() => removeCartItem(item.id)}><i className="bi bi-x-circle"></i></button>
+                                                <button className="btn btn-danger" onClick={() => removeCartItem(item.id)}>
+                                                    <i className="bi bi-x-circle"></i>
+                                                </button>
                                             </div>
                                         </td>
                                         <td>Rs. {item.price}</td>
