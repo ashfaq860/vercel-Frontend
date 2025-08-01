@@ -655,10 +655,13 @@ export const sendOrderMailToClient = async (data) => {
 }
 /** functions to getting Charts Data */
 export const getGrowthChartData = async (type, year, month=null) => {
-    let response;
+   let response;
     try {
-        response = await api.get(`/growthChartData/${type}/${year}/${month}`);
-
+        let url = `/growthChartData/${type}/${year}`;
+        if (month !== null && month !== undefined) {
+            url += `/${month}`;
+        }
+        response = await api.get(url);
     } catch (error) {
         return error;
     }
