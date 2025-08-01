@@ -111,7 +111,7 @@ const Single = () => {
             <Layout>
             <Helmet>
                     <meta charSet="utf-8" />
-                    <title>{`${product?.name} ${product?.category} ${product?.manufacturer}`}-Mian Motorcycle Parts Shop Raiwind</title>
+                    <title>{`${product?.name} ${product?.category?.name} ${product?.manufacturer}`}-Mian Motorcycle Parts Shop Raiwind</title>
                     <meta name="description" content={`${product?.name} ${product?.category?.name} ${product?.manufacturer} Mian Motocycle Parts, Honda 70 , CG125, China 70, Uniter 100, Ching CHi Rickshaw, Location Kasur Road Raiwind`} />
                 </Helmet>
                 <div className="container latestProduct">
