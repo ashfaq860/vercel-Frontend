@@ -59,7 +59,7 @@ const UpdateProduct = () => {
                     quantity: product.quantity || '',
                     quality: product.quality || '',
                     photo: product.photo || '',
-                    category: product.cId || '',
+                    category: product?.category?._id || '',
                     desc: product.desc || '',
                     tags: product.tags || '',
                     shippingCost: product.shippingCost || 0,
@@ -184,7 +184,7 @@ const UpdateProduct = () => {
                                 >
                                     <option value="">Select Vehicle</option>
                                     {categories.map(cat => (
-                                        <option key={cat._id} value={productData?.category?._id}>
+                                        <option key={cat._id} value={cat._id}>
                                             {cat.name}
                                         </option>
                                     ))}
