@@ -62,6 +62,7 @@ const Cart = () => {
         );
     }
 const handleChangeQuantity    =    (id,value)=>{
+    alert(id,value);
 setUpdateQTY(prev => ({ ...prev, [id]: Number(value) }));
 UpdateCartItem(id);
 }
@@ -100,7 +101,7 @@ UpdateCartItem(id);
                                                     type="number"
                                                     className="form-control"
                                                     defaultValue={item.qty}
-                                                    onChange={(e) => handleChangeQuantity(item.id,e.target.value)}
+                                                    onChange={(e) => handleChangeQuantity(item.id, e.target.value)}
                                                 />
                                                 <button className="btn btn-primary" onClick={() => UpdateCartItem(item.id)}><i className="bi bi-arrow-clockwise"></i></button>
                                                 <button className="btn btn-danger" onClick={() => removeCartItem(item.id)}><i className="bi bi-x-circle"></i></button>
