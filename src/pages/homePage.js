@@ -6,7 +6,7 @@ import Layout from '../components/layout/layout';
 import LatestCategories from "../components/products/latestCategories";
 import { Helmet } from 'react-helmet-async';
 
-import useScrollAnimation from "./srollAnimation";
+import useScrollAnimation from "./scrollAnimation";
 
 const HomePage = () => {
     useScrollAnimation();
