@@ -184,7 +184,7 @@ const UpdateProduct = () => {
                                 >
                                     <option value="">Select Vehicle</option>
                                     {categories.map(cat => (
-                                        <option key={cat._id} value={cat._id}>
+                                        <option key={cat._id} value={productData?.category?._id}>
                                             {cat.name}
                                         </option>
                                     ))}
