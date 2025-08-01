@@ -1,9 +1,9 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend,Filler } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { OrderStatusPiChart } from '../../api/internal';
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend,Filler);
 
 export function PiChart() {
     const [piChartData, setPiChartData] = useState(null);
