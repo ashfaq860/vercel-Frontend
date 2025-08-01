@@ -7,6 +7,7 @@ import {
     CategoryScale,
     Tooltip,
     Legend,
+    Filler,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useEffect } from "react";
@@ -18,7 +19,8 @@ ChartJS.register(
     LinearScale,
     CategoryScale,
     Tooltip,
-    Legend
+    Legend,
+    Filler
 );
 export default function StatCard({ title, icon, color, extra, dataSet, Chartlabels,rs }) {
     const [total, setTotal] = useState("");
