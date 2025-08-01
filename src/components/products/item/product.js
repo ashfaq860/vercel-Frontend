@@ -7,7 +7,7 @@ import {useScrollAnimation} from "./srollAnimation"; // ✅ Correct path here
 const Product = (props) => {
 	useScrollAnimation();
 	const dispatch = useDispatch();
-	//console.log(props);
+	
 	const getAddToCart = (product) => {
 		//console.log(product);
 		let p = {};	
