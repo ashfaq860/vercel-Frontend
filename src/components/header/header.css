@@ -106,7 +106,7 @@ ul.socialIcons li a {
 .nav-link {
     color: #282828 !important;
     font-family: Rubik !important;
-    padding: 18px 10px 16px 10px;
+   // padding: 18px 10px 16px 10px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     margin-left:2px;
